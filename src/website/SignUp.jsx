@@ -366,7 +366,7 @@ const SignUpForm = () => {
                                     <div>
                                         <div className="form-group">
                                             <label>Company Name:</label>
-                                            <input type="text" value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
+                                            <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
                                         </div>
                                         {/* <button type="button" onClick={handleNext}>
                                             Next
