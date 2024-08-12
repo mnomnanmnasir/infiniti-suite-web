@@ -2705,7 +2705,8 @@ body {
   font-weight: normal;
   font-style: normal;
   color: var(--body-color);
-  /* overflow: auto; */
+  overflow-y: scroll;
+  
   
 }
 
@@ -2714,7 +2715,7 @@ body {
   padding: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  /* overflow-y: hidden; */
+  /* overflow-y: scroll; */
   /* overflow-x: hidden; */
 }
 
