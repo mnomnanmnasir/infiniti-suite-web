@@ -2705,7 +2705,8 @@ body {
   font-weight: normal;
   font-style: normal;
   color: var(--body-color);
-  overflow-x: hidden;
+  overflow: auto;
+  
 }
 
 * {
@@ -5713,4 +5714,32 @@ input.search-box {
 
 .select-box ol li .country-name {
   margin-left: .4rem;
+}
+
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* Space for the eye icon */
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px; /* Adjust size as needed */
+  color: #888; /* Adjust color as needed */
+}
+
+.password-toggle i {
+  color: #333; /* Adjust color of the eye icon as needed */
 }
