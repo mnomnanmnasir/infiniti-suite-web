@@ -116,11 +116,11 @@ const Footer = () => {
                                                 <img style={{ width: '40px' }} src={verdeBook} alt="graygrids" />
                                             </a>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <a href="https://caiif.ca" rel="nofollow noopener" target="_blank">
                                                 <img style={{ width: '40px' }} src={caiif} alt="lineicons" />
                                             </a>
-                                        </li>
+                                        </li> */}
                                     </ul>
                                 </div>
                             </div>
