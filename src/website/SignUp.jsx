@@ -53,28 +53,28 @@ const SignUpForm = () => {
     const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [country, setCountry] = useState('');
-    // const [timeeZone, settimeZone] = useState('');
+    const [timeeZone, settimeZone] = useState('');
 
-    const [timeeZone, settimeZone] = useState(
-        Intl.DateTimeFormat().resolvedOptions().timeeZone
-    )
-    const items = JSON.parse(localStorage.getItem('items'));
+    // const [timeeZone, settimeZone] = useState(
+    //     Intl.DateTimeFormat().resolvedOptions().timeeZone
+    // )
+    // const items = JSON.parse(localStorage.getItem('items'));
 
-    let headers = {
-        Authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json'
-    }
+    // let headers = {
+    //     Authorization: 'Bearer ' + token,
+    //     'Content-Type': 'application/json'
+    // }
 
-    const handleStartDateChange = (timeeZone) => {
-        console.log(timeeZone);
-        settimeZone(timeeZone);
-        const newtime = timeeZone?.value;
-        setModel({ "timezoneOffset": timeeZone?.offset })
-        setModel((prevUserInfo) => ({
-            ...prevUserInfo,
-            timeeZone: newtime,
-        }));
-    };
+    // const handleStartDateChange = (timeeZone) => {
+    //     console.log(timeeZone);
+    //     settimeZone(timeeZone);
+    //     const newtime = timeeZone?.value;
+    //     setModel({ "timezoneOffset": timeeZone?.offset })
+    //     setModel((prevUserInfo) => ({
+    //         ...prevUserInfo,
+    //         timeeZone: newtime,
+    //     }));
+    // };
 
 
     const handleNext = () => {
@@ -477,16 +477,18 @@ const SignUpForm = () => {
                                         </div>
                                         <div className="form-group" >
                                             <label>Timezone:</label>
-                                            <div className="dropdown" style={{zIndex:'2'}}>
-                                                <div>
-                                                    <TimezoneSelect value={timeeZone ? timeeZone : items.timeeZone} onChange={handleStartDateChange} />
-                                                </div>
-                                                {/* <Timezone /> */}
-                                                {/* <button className="btn btn-secondary dropdown-toggle  countryDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <input type="text" value={timeeZone} onChange={(e) => settimeZone(e.target.value)} />
+                                            {/* <div className="dropdown" style={{ zIndex: '2' }}>
+                                                <div> */}
+                                            {/* <TimezoneSelect value={timeeZone ? timeeZone : items.timeeZone} onChange={handleStartDateChange} /> */}
+                                        </div>
+                                        {/* <Timezone /> */}
+
+                                        {/* <button className="btn btn-secondary dropdown-toggle  countryDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 (UTC+05:00) Islamabad, Karachi
                                             </button> */}
-                                            </div>
-                                        </div>
+                                        {/* </div> */}
+                                        {/* </div> */}
                                         {/* <button type="button" onClick={handlePrevious}>
                                             Previous
                                         </button> */}
