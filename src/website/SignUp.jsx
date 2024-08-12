@@ -6,6 +6,7 @@ import Footer from './Footer';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import TimezoneSelect from 'react-timezone-select';
 
 
 const countries = [
@@ -35,22 +36,45 @@ const SignUpForm = () => {
     //     postalCode: '',
     //     country: '',
     // });
+
+    let token = localStorage.getItem('token');
+    const [model, setModel] = useState({});
     const [step, setStep] = useState(1);
     const navigate = useNavigate()
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [emailAdress, setEmailAdress] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [yourPosition, setYourPosition] = useState('');
-    const [saleBefore, setSaleBefore] = useState('');
-    const [wantFirst, setWantFirst] = useState('');
     const [companyName, setCompanyName] = useState('');
-    const [noOfEmployees, setNoOfEmployees] = useState('');
     const [selectCompanyType, setSelectCompanyType] = useState('');
-    const [employeeWillUse, setEmployeeWillUse] = useState('');
-    const [address, setAddress] = useState('');
+    const [yourPosition, setYourPosition] = useState('');
+    const [noOfEmployees, setNoOfEmployees] = useState('');
+    const [streetAdress, setStreetAddress] = useState('');
+    const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [country, setCountry] = useState('');
+    // const [timeeZone, settimeZone] = useState('');
+
+    const [timeeZone, settimeZone] = useState(
+        Intl.DateTimeFormat().resolvedOptions().timeeZone
+    )
+    const items = JSON.parse(localStorage.getItem('items'));
+
+    let headers = {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    const handleStartDateChange = (timeeZone) => {
+        console.log(timeeZone);
+        settimeZone(timeeZone);
+        const newtime = timeeZone?.value;
+        setModel({ "timezoneOffset": timeeZone?.offset })
+        setModel((prevUserInfo) => ({
+            ...prevUserInfo,
+            timeeZone: newtime,
+        }));
+    };
 
 
     const handleNext = () => {
@@ -131,24 +155,24 @@ const SignUpForm = () => {
         event.preventDefault();
 
         const registerData = {
-            name,
-            email,
+            fullName,
+            emailAdress,
             password,
             phoneNumber,
-            yourPosition,
-            saleBefore,
-            wantFirst,
             companyName,
-            noOfEmployees,
             selectCompanyType,
-            employeeWillUse,
-            address,
+            yourPosition,
+            noOfEmployees,
+            streetAdress,
+            city,
             postalCode,
             country,
+            timeeZone,
+
         };
 
         try {
-            
+
             const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signup', registerData);
             console.log('Registration successful!');
             console.log(response.data);
@@ -164,7 +188,7 @@ const SignUpForm = () => {
             toast.error('Error registering!');
         }
     };
-    // console.log('Handle Submit ....', handleSubmit())
+    // console.log('Handle Submit ....', handleSubmit())no
 
     return (
         <>
@@ -185,7 +209,7 @@ const SignUpForm = () => {
                     </div>
                 </div>
             </section>
-            <section id="contact" className="ud-contact">
+            <section id="contact" className="ud-contact" style={{ overflowY: 'auto' }}>
                 <div className="container">
                     <div className="signpwrapper" style={{ width: '40%', display: 'block', margin: '0 auto' }}>
                         <div className="ud-contact-content-wrapper">
@@ -308,13 +332,13 @@ const SignUpForm = () => {
                                 {currentStep === 1 && (
                                     <div>
                                         <div className="form-group">
-                                            <label>Name:</label>
-                                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                            <label>Full Name:</label>
+                                            <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Email:</label>
-                                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <label>Email Address:</label>
+                                            <input type="email" value={emailAdress} onChange={(e) => setEmailAdress(e.target.value)} />
                                         </div>
 
                                         <div className="form-group">
@@ -325,12 +349,12 @@ const SignUpForm = () => {
                                         <div className="form-group">
                                             <label>Phone Number:</label>
                                             {/* <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /> */}
-                                            <div className="selected-option">
+                                            {/* <div className="selected-option">
                                                 <div className="ahad-custom-mobile">
                                                     <strong>+44</strong>
                                                 </div>
-                                                <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                            </div>
+                                            </div> */}
+                                            <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
                                         </div>
 
                                         <div className="nav-buttons">
@@ -341,20 +365,32 @@ const SignUpForm = () => {
                                 {currentStep === 2 && (
                                     <div>
                                         <div className="form-group">
-                                            <label>Your Position:</label>
+                                            <label>Company Name:</label>
                                             <input type="text" value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
                                         </div>
                                         {/* <button type="button" onClick={handleNext}>
                                             Next
                                         </button> */}
 
+
                                         <div className="form-group">
-                                            <label>Have you used any sales tool before:</label>
-                                            <input type="text" value={saleBefore} onChange={(e) => setSaleBefore(e.target.value)} />
+                                            <label>Select Company Type:</label>
+                                            <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
+                                                <option value="technology-startup">Technology Startup</option>
+                                                <option value="ecommerce-business">E-commerce Business</option>
+                                                <option value="manufacturing-company">Manufacturing Company</option>
+                                                <option value="consulting-firm">Consulting Firm</option>
+                                                <option value="healthcare-services">Healthcare Services</option>
+                                                <option value="financial-services">Financial Services</option>
+                                            </select>
                                         </div>
 
                                         <div className="form-group">
-                                            <label>What do you want to do first:</label>
+                                            <label>Position (optional):</label>
+                                            <input type="text" value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
+                                        </div>
+                                        {/* <div className="form-group">
+                                            <label>Position (optional):</label>
                                             <select value={wantFirst} onChange={(e) => setWantFirst(e.target.value)}>
                                                 <option value="Close deals faster">Close deals faster</option>
                                                 <option value="Find new leads">Find new leads</option>
@@ -362,12 +398,19 @@ const SignUpForm = () => {
                                                 <option value="Set goals and track progress">Set goals and track progress</option>
                                                 <option value="Set up a team and permissions">Set up a team and permissions</option>
                                             </select>
-                                        </div>
-
+                                        </div> */}
                                         <div className="form-group">
+                                            <label>Number of Employees (optional):</label>
+                                            <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
+                                                <option value="10-50">10-50</option>
+                                                <option value="50-100">50-100</option>
+                                                <option value="100-200">100-200</option>
+                                            </select>
+                                        </div>
+                                        {/* <div className="form-group">
                                             <label>Company Name:</label>
                                             <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-                                        </div>
+                                        </div> */}
                                         <div className="nav-buttons">
                                             <button type="button" onClick={prevStep}>
                                                 Previous
@@ -382,16 +425,16 @@ const SignUpForm = () => {
 
                                 {currentStep === 3 && (
                                     <div>
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label>Number of Employees:</label>
                                             <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
                                                 <option value="10-50">10-50</option>
                                                 <option value="50-100">50-100</option>
                                                 <option value="100-200">100-200</option>
                                             </select>
-                                        </div>
+                                        </div> */}
 
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label>Select Company Type:</label>
                                             <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
                                                 <option value="technology-startup">Technology Startup</option>
@@ -413,13 +456,16 @@ const SignUpForm = () => {
                                                 <option value="51-100">51-100</option>
                                                 <option value="100+">100+</option>
                                             </select>
-                                        </div>
+                                        </div> */}
 
                                         <div className="form-group">
-                                            <label>Address:</label>
-                                            <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                            <label>Street Address:</label>
+                                            <input type="text" value={streetAdress} onChange={(e) => setStreetAddress(e.target.value)} />
                                         </div>
-
+                                        <div className="form-group">
+                                            <label>City:</label>
+                                            <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                                        </div>
                                         <div className="form-group">
                                             <label>Postal Code:</label>
                                             <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
@@ -429,11 +475,23 @@ const SignUpForm = () => {
                                             <label>Country:</label>
                                             <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
                                         </div>
+                                        <div className="form-group" >
+                                            <label>Timezone:</label>
+                                            <div className="dropdown" style={{zIndex:'2'}}>
+                                                <div>
+                                                    <TimezoneSelect value={timeeZone ? timeeZone : items.timeeZone} onChange={handleStartDateChange} />
+                                                </div>
+                                                {/* <Timezone /> */}
+                                                {/* <button className="btn btn-secondary dropdown-toggle  countryDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                (UTC+05:00) Islamabad, Karachi
+                                            </button> */}
+                                            </div>
+                                        </div>
                                         {/* <button type="button" onClick={handlePrevious}>
                                             Previous
                                         </button> */}
                                         <div className="nav-buttons">
-                                        <button type="button" onClick={prevStep}>
+                                            <button type="button" onClick={prevStep}>
                                                 Previous
                                             </button>
                                             <button type="submit" className="next-btn">Submit</button>
