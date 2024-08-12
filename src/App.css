@@ -2705,7 +2705,7 @@ body {
   font-weight: normal;
   font-style: normal;
   color: var(--body-color);
-  overflow: auto;
+  /* overflow: auto; */
   
 }
 
@@ -4047,6 +4047,7 @@ p {
 .ud-contact {
   padding: 120px 0px;
   position: relative;
+  overflow: auto;
 }
 
 @media (max-width: 767px) {
