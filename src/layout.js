@@ -16,7 +16,7 @@ import dollar from './assets/dollar.svg';
 const Layout = () => {
 
     const [items, setItems] = useState([
-        { path: '/', isActive: false },
+        { path: '/header', isActive: false },
         { path: '/deals', isActive: false },
         { path: '/gmail', isActive: false },
         { path: '/docs', isActive: false },

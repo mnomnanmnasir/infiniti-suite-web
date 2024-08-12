@@ -33,8 +33,8 @@ function Gmail() {
 
     useEffect(() => {
         localStorage.setItem("auth_token", params.token)
-        localStorage.setItem("gmail", email)
-        localStorage.setItem("gpassword", password)
+        localStorage.setItem("email", email)
+        localStorage.setItem("password", password)
     }, [])
 
     const [items, setItems] = useState([
@@ -82,7 +82,7 @@ function Gmail() {
 
     const initClient = () => {
         gapi.client.init({
-            apiKey: "AIzaSyBcyi-E1WIfj3gvWVUk6jc4erXAAgw2PFM",
+            apiKey: "AIzaSyBnfB76i1iSe8mn2eywaWYKTL22ThTA25E",
             clientId: clientId,  // Ensure this is correctly set
             discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"],
             scope: "https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/contacts.readonly https://www.googleapis.com/auth/drive.readonly"
@@ -95,6 +95,7 @@ function Gmail() {
             console.error("Failed to init GAPI client", error);
         });
     }
+    // gapi.load('client:auth2', initClient)
 
     function getUserInfo() {
         var auth2 = gapi.auth2.getAuthInstance();
@@ -428,24 +429,30 @@ function Gmail() {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(String(email).toLowerCase());
         }
-
         const handleSignIn = async () => {
             if (!validateEmail(email)) {
                 setError("Please enter a valid email");
                 return;
             }
             try {
-                setError("")
+                setError("");
                 const auth2 = gapi.auth2.getAuthInstance();
+                console.log('auth2 chala', auth2)
+                if (!auth2) {
+                    console.error("Google Auth API not initialized");
+                    return;
+                }
                 await auth2.signIn({ prompt: 'select_account', login_hint: email });
                 const token = auth2.currentUser.get().getAuthResponse().access_token;
+                console.log('token.......', token);
                 localStorage.setItem("user_token", token);
-                console.log(token);
+
+                // Redirect to Gmail inbox
+                // window.location.replace("https://mail.google.com/mail/u/0/#inbox");
             } catch (error) {
                 console.error("Error signing in", error);
             }
         };
-
         console.log(activeEmailLink);
 
         return (
