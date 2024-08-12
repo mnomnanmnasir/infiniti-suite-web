@@ -2845,6 +2845,7 @@ p {
 .ud-main-btn:hover {
   color: var(--white);
   background: var(--heading-color);
+  
 }
 
 @media (max-width: 767px) {
@@ -3178,7 +3179,9 @@ p {
 
 .navbar-btn .ud-white-btn:hover {
   background: blue;
-  color: var(--primary-color);
+  /* color: var(--heading-color); */
+  background: #007ab9;
+
 }
 
 .sticky .navbar-toggler .toggler-icon {
@@ -4048,7 +4051,7 @@ p {
 .ud-contact {
   padding: 120px 0px;
   position: relative;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 @media (max-width: 767px) {
