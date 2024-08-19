@@ -169,7 +169,7 @@ const SignUpForm = () => {
             }
 
             // Send data to the first API
-        const response1 = await fetch('http://127.0.0.1:7900/api/addOrganization', {
+            const response1 = await fetch('https://verdebooks-backend.vercel.app/api/addOrganization', {
             method: 'POST',
             body: formDataObject, // Send FormData directly
         });
