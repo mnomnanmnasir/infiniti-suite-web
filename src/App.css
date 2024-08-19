@@ -2705,7 +2705,8 @@ body {
   font-weight: normal;
   font-style: normal;
   color: var(--body-color);
-  overflow: auto;
+  overflow-y: scroll;
+  
   
 }
 
@@ -2714,7 +2715,7 @@ body {
   padding: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  /* overflow-y: hidden; */
+  /* overflow-y: scroll; */
   /* overflow-x: hidden; */
 }
 
@@ -2844,6 +2845,7 @@ p {
 .ud-main-btn:hover {
   color: var(--white);
   background: var(--heading-color);
+  
 }
 
 @media (max-width: 767px) {
@@ -3177,7 +3179,9 @@ p {
 
 .navbar-btn .ud-white-btn:hover {
   background: blue;
-  color: var(--primary-color);
+  /* color: var(--heading-color); */
+  background: #007ab9;
+
 }
 
 .sticky .navbar-toggler .toggler-icon {
@@ -4047,6 +4051,7 @@ p {
 .ud-contact {
   padding: 120px 0px;
   position: relative;
+  /* overflow: auto; */
 }
 
 @media (max-width: 767px) {
@@ -5742,4 +5747,22 @@ input.search-box {
 
 .password-toggle i {
   color: #333; /* Adjust color of the eye icon as needed */
+}
+
+
+.ud-faq-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ud-single-faq {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.ud-faq-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
