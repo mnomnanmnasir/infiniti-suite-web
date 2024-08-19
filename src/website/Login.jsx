@@ -4,7 +4,6 @@ import Footer from './Footer';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 
 
@@ -13,8 +12,6 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); // Initialize useHistory hook
 
-    const [showPassword, setShowPassword] = useState(false); // State for password visibility
-
 
 
     const handleSubmit = async (event) => {
@@ -22,35 +19,42 @@ const Login = () => {
 
         const loginData = {
             email,
-            password,
+            password
         };
 
+        const apiEndpoint = "https://infinitisuiteapi.vercel.app/api/v1/signin";
+
         try {
-            const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signin', loginData);
-            console.log('Login successful!');
-            console.log(response.data);
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            });
 
-            // Show success toast
-            toast.success('Login successful!');
+            const data = await response.json();
 
-            // Navigate to dashboard page
-            navigate('/deals', { replace: true });
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-              // Show error toast with custom message
-              toast.error('User not found. Please register first.');
-            } else {
-              console.error('Error logging in:', error);
-              // Show error toast
-              toast.error('User Not Exist');
+            if (response.ok) {
+                localStorage.setItem("email", email)
+        localStorage.setItem("password", password)
+                toast.success('Login successfully!');
+                // Redirect to dashboard or any other route
+              
+                navigate('/dashboard'); // Replace '/dashboard' with your desired route
+                event.target.reset(); // Reset form fields
             }
-          }
-    };
 
-    const togglePasswordVisibility = () => {
-        // setShowPassword(!showPassword);
-        setShowPassword(prevShowPassword => !prevShowPassword);
-
+            else {
+                toast.error('Invalid email or password');
+                setEmail('');
+                setPassword('');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('An error occurred. Please try again later.');
+        }
     };
 
 
@@ -93,7 +97,7 @@ const Login = () => {
                                                 required
                                             />
                                         </div>
-                                        {/* <div className="ud-form-group">
+                                        <div className="ud-form-group">
                                             <input
                                                 id="password_input"
                                                 type="password"
@@ -103,31 +107,8 @@ const Login = () => {
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 required
                                             />
-                                        </div> */}
-                                        <div className="ud-form-group password-container">
-                                            <input
-                                                id="password_input"
-                                                type={showPassword ? 'text' : 'password'} // Toggle password visibility
-                                                name="password"
-                                                placeholder="*********"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                required
-                                            />
-                                            <button
-                                                type="button"
-                                                className="password-toggle"
-                                                onClick={togglePasswordVisibility}
-                                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                                            >
-                                                {showPassword ? (
-                                                    <i className="fas fa-eye"></i> // Font Awesome icon for hide
-                                                ) : (
-                                                    <i className="fas fa-eye-slash"></i> // Font Awesome icon for show
-                                                )}
-                                            </button>
                                         </div>
-                                        <div className="ud-form-group w-100" style={{ marginLeft: '2%' }}>
+                                        <div className="ud-form-group w-100" style={{marginLeft: '2%'}}>
                                             <button className="ud-main-btn w-100" type="submit">
                                                 Login
                                             </button>
