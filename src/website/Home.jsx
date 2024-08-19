@@ -213,7 +213,7 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="ud-section-title mx-auto text-center">
-                <span>Pricing</span>
+                {/* <span>Pricing</span> */}
                 <h2>Our Pricing Plans</h2>
                 <p>
                   Here are three packages of services that you could offer as part of your comprehensive suite of productivity tools and SaaS applications.
@@ -344,7 +344,7 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="ud-section-title text-center mx-auto">
-                <span>FAQ</span>
+                {/* <span>FAQ</span> */}
                 <h2>Any Questions? Answered</h2>
                 <p>
                   Below are common questions and answers about the Infiniti Suite.
@@ -598,7 +598,7 @@ const Home = () => {
                     <textarea name="message" rows="1" placeholder="type your message here"></textarea>
                   </div>
                   <div class="ud-form-group mb-0">
-                    <button type="submit" class="ud-main-btn">
+                    <button type="submit" className="ud-main-btn">
                       Send Message
                     </button>
                   </div>
