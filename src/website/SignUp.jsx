@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import TimezoneSelect from 'react-timezone-select';
 
 
 const countries = [
@@ -19,108 +16,31 @@ const countries = [
 ];
 
 const SignUpForm = () => {
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [options, setOptions] = useState([]);
-
-    useEffect(() => {
-        const optionsList = countries.map((country) => (
-            <li key={country.code} className="option">
-                <div>
-                    <span className="iconify" data-icon={`flag:${country.code.toLowerCase()}-4x3`} />
-                    <span className="country-name">{country.name}</span>
-                </div>
-                <strong>+{country.phone}</strong>
-            </li>
-        ));
-        setOptions(optionsList);
-    }, []);
-
-    const handleSelectOption = (option) => {
-        setSelectedCountry(option);
-        setSearchQuery('');
-    };
-
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const filteredOptions = options.filter((option) => {
-            const countryName = option.querySelector('.country-name').innerText.toLowerCase();
-            return countryName.includes(e.target.value.toLowerCase());
-        });
-        setOptions(filteredOptions);
-    };
     const [currentStep, setCurrentStep] = useState(1);
-    // const [formData, setFormData] = useState({
-    //     name: '',
-    //     email: '',
-    //     password: '',
-    //     phoneNumber: '',
-    //     yourPosition: '',
-    //     saleBefore: '',
-    //     wantFirst: '',
-    //     companyName: '',
-    //     noOfEmployess: '',
-    //     selectCompanyType: '',
-    //     employeeWillUse: '',
-    //     address: '',
-    //     postalCode: '',
-    //     country: '',
-    // });
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        phoneNumber: '',
+        yourPosition: '',
+        saleBefore: '',
+        wantFirst: '',
+        companyName: '',
+        noOfEmployees: '',
+        selectCompanyType: '',
+        employeeWillUse: '',
+        address: '',
+        postalCode: '',
+        country: '',
+    });
 
-    let token = localStorage.getItem('token');
-    const [model, setModel] = useState({});
-    const [step, setStep] = useState(1);
-    const navigate = useNavigate()
-    const [fullName, setFullName] = useState('');
-    const [emailAdress, setEmailAdress] = useState('');
-    const [password, setPassword] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [companyName, setCompanyName] = useState('');
-    const [selectCompanyType, setSelectCompanyType] = useState('');
-    const [yourPosition, setYourPosition] = useState('');
-    const [noOfEmployees, setNoOfEmployees] = useState('');
-    const [streetAdress, setStreetAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [postalCode, setPostalCode] = useState('');
-    const [country, setCountry] = useState('');
-    // const [timeeZone, settimeZone] = useState('');
-    const [address, setFullAddress] = useState('');
-    const [timeeZone, settimeZone] = useState(
-        Intl.DateTimeFormat().resolvedOptions().timeeZone
-    )
-    const items = JSON.parse(localStorage.getItem('items'));
-
-    let headers = {
-        Authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json'
-    }
-
-    const handleStartDateChange = (timeeZone) => {
-        console.log(timeeZone);
-        settimeZone(timeeZone);
-        const newtime = timeeZone?.value;
-        setModel({ "timezoneOffset": timeeZone?.offset })
-        setModel((prevUserInfo) => ({
-            ...prevUserInfo,
-            timeeZone: newtime,
-        }));
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
-
-
-    const handleNext = () => {
-        setStep(step + 1);
-    };
-
-    const handlePrevious = () => {
-        setStep(step - 1);
-    };
-    // const handleInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({
-    //         ...formData,
-    //         [name]: value,
-    //     });
-    // };
 
     const validateStep = (step) => {
         let isValid = true;
@@ -152,75 +72,77 @@ const SignUpForm = () => {
         }
     };
 
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     console.log('Form Data:', formData); // Log form data for debugging
 
-    useEffect(() => {
-        const concatenatedAddress = `${streetAdress}, ${city}, ${postalCode}, ${country}`;
-        setFullAddress(concatenatedAddress);
-    }, [streetAdress, city, postalCode, country]);
+    //     try {
+    //         const response = await fetch('https://infinitisuiteapi.vercel.app/api/v1/signup', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(formData),
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             if (data.error && data.error.includes('duplicate key error')) {
+    //                 toast.error('This email is already registered. Please use a different email.');
+    //             } else {
+    //                 throw new Error('Network response was not ok');
+    //             }
+    //         } else {
+    //             console.log('Success:', data);
+    //             toast.success('Account created successfully!');
+
+    //             event.target.reset(); // Reset form fields
+    //             // Optionally, redirect to another page
+    //             // window.location.href = 'http://localhost:3001/gmail';
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //         toast.error('This email is already registered. Please use a different email.');
+    //     }
+    // };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log('Form Data:', formData); // Log form data for debugging
 
-        const registerData = {
-            fullName,
-            emailAdress,
-            password,
-            phoneNumber,
-            companyName,
-            selectCompanyType,
-            yourPosition,
-            noOfEmployees,
-            address,
-            timeeZone,
-        };
-        console.log('Register Data:', registerData);
-
-        const infinitiDataObject = new FormData();
-        infinitiDataObject.append('name', fullName);
-        infinitiDataObject.append('email', emailAdress)
-        infinitiDataObject.append('password', password)
-        infinitiDataObject.append('phoneNumber', phoneNumber)
-        infinitiDataObject.append('yourPosition', yourPosition)
-        infinitiDataObject.append('saleBefore', 'no')
-        infinitiDataObject.append('companyName', companyName)
-        infinitiDataObject.append('noOfEmployees', noOfEmployees)
-        infinitiDataObject.append('selectCompanyType', selectCompanyType)
-        // infinitiDataObject.append('employeeWillUse', )
-        infinitiDataObject.append('address', address)
-        infinitiDataObject.append('postalCode', postalCode)
-        infinitiDataObject.append('country', country)
-
+        // Prepare data for each API endpoint
         // Prepare data for each API endpoint using FormData
-        const verdeDataObject = new FormData();
-        verdeDataObject.append('orgname', companyName);
-        verdeDataObject.append('postalcode', postalCode);
-        verdeDataObject.append('street', streetAdress);
-        verdeDataObject.append('city', city);
-        verdeDataObject.append('email', emailAdress);
-        verdeDataObject.append('password', password);
+        const formDataObject = new FormData();
+        formDataObject.append('orgname', formData.companyName);
+        formDataObject.append('postalcode', '676yz');
+        formDataObject.append('street', '2');
+        formDataObject.append('city', 'karachi');
+        formDataObject.append('email', formData.email);
+        formDataObject.append('password', formData.password);
 
         const universalLanguageData = {
-            name: fullName,
-            password: password,
-            email: emailAdress,
+            name: formData.name,
+            password: formData.password,
+            email: formData.email,
             userType: "owner",
-            timezone: timeeZone,
+            timezone: "5",
             timezoneOffset: "Asia/Karachi",
-            company: companyName
+            company: formData.companyName
         };
 
         const clickhrData = new FormData();            
-        clickhrData.append('company', companyName);
-        clickhrData.append('com_email', emailAdress);
-        clickhrData.append('com_number', phoneNumber);
-        clickhrData.append('num', phoneNumber);
-        clickhrData.append('email',  emailAdress);
+        clickhrData.append('company', formData.companyName);
+        clickhrData.append('com_email', formData.email);
+        clickhrData.append('com_number', formData.phoneNumber);
+        clickhrData.append('num', formData.phoneNumber);
+        clickhrData.append('email', formData.email);
         clickhrData.append('com_web', 'sstrack.io');
-        clickhrData.append('nemp', noOfEmployees);
-        clickhrData.append('fname', fullName);
-        clickhrData.append('lname', fullName);
-        clickhrData.append('com_address', address);
-        clickhrData.append('password', password)
+        clickhrData.append('nemp', formData.noOfEmployees);
+        clickhrData.append('fname', formData.name);
+        clickhrData.append('lname', formData.name);
+        clickhrData.append('com_address', formData.address);
+        clickhrData.append('password', formData.password)
 
 
         try {
@@ -229,7 +151,7 @@ const SignUpForm = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(infinitiDataObject),
+                body: JSON.stringify(formData),
             });
 
             const data = await response.json();
@@ -247,9 +169,9 @@ const SignUpForm = () => {
             }
 
             // Send data to the first API
-        const response1 = await fetch('https://verdebooks-backend.vercel.app/api/addOrganization', {
+        const response1 = await fetch('http://127.0.0.1:7900/api/addOrganization', {
             method: 'POST',
-            body: verdeDataObject, // Send FormData directly
+            body: formDataObject, // Send FormData directly
         });
 
             const data1 = await response1.json();
@@ -329,7 +251,8 @@ const SignUpForm = () => {
         }
 
     };
-    // console.log('Handle Submit ....', handleSubmit())no
+
+
 
     return (
         <>
@@ -353,7 +276,7 @@ const SignUpForm = () => {
             <section id="contact" className="ud-contact">
                 <div className="container">
                     <div className="signpwrapper" style={{ width: '40%', display: 'block', margin: '0 auto' }}>
-                        <div className="ud-contact-content-wrapper">
+                        <div className="ud-contact-content-wrapper wow fadeInUp" data-wow-delay=".2s">
                             <div className="step-indicator">
                                 <div className={`step ${currentStep >= 1 ? 'active' : ''}`}></div>
                                 <div className={`step ${currentStep >= 2 ? 'active' : ''}`}></div>
@@ -366,135 +289,96 @@ const SignUpForm = () => {
                                 <li id="confirm"><strong>Finish</strong></li>
                             </ul>
                             <br /><br /><br />
-                            <div className="ud-banner-content">
+                            <div class="ud-banner-content">
                                 <h1 style={{ color: "#3056d3" }}>Let's Get Started</h1>
                                 <p style={{ color: "#050505" }}>First You'll need to create the Account.</p>
                             </div>
-                            <form onSubmit={handleSubmit} >
+                            <form id="signup-form" onSubmit={handleSubmit}>
                                 {currentStep === 1 && (
-                                    <div>
+                                    <div className="form-container active" id="step-1">
                                         <div className="form-group">
-                                            <label>Full Name:</label>
-                                            <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                                            <label htmlFor="name">Your Name:</label>
+                                            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
                                         </div>
-
                                         <div className="form-group">
-                                            <label>Email Address:</label>
-                                            <input type="email" value={emailAdress} onChange={(e) => setEmailAdress(e.target.value)} />
+                                            <label htmlFor="email">Your Work Email:</label>
+                                            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required />
                                         </div>
-
                                         <div className="form-group">
-                                            <label>Password:</label>
-                                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <label htmlFor="password">Set a Password:</label>
+                                            <input type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} required />
                                         </div>
-                                        {/* <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /> */}
-
                                         <div className="form-group">
-                                            <label>Phone Number:</label>
-                                            <div className="selected-option">
-                                                <div className="ahad-custom-mobile">
-                                                    <strong>+44</strong>
+                                            <div className="select-box">
+                                                <label htmlFor="phoneNumber">Phone Number:</label>
+                                                <div className="selected-option">
+                                                    <div className="ahad-custom-mobile">
+                                                        <strong>+44</strong>
+                                                    </div>
+                                                    <input type="tel" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} required />
                                                 </div>
-                                                <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                                                <div className="options">
+                                                    <input type="text" className="search-box" placeholder="Search Country Name" />
+                                                    <ol>
+                                                        {countries.map((country) => (
+                                                            <li key={country.code} onClick={() => setFormData({ ...formData, phoneNumber: `+${country.phone}` })}>
+                                                                {country.name}
+                                                            </li>
+                                                        ))}
+                                                    </ol>
+                                                </div>
                                             </div>
                                         </div>
-
                                         <div className="nav-buttons">
                                             <button type="button" className="next-btn" onClick={nextStep}>Next</button>
                                         </div>
                                     </div>
                                 )}
+
                                 {currentStep === 2 && (
-                                    <div>
-                                        {/* <div className="form-group">
-                                                                            <label>Number of Employees:</label>
-                                                                            <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
-                                                                                <option value="10-50">10-50</option>
-                                                                                <option value="50-100">50-100</option>
-                                                                                <option value="100-200">100-200</option>
-                                                                            </select>
-                                                                        </div> */}
-
-                                        {/* <div className="form-group">
-                                                                            <label>Select Company Type:</label>
-                                                                            <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
-                                                                                <option value="technology-startup">Technology Startup</option>
-                                                                                <option value="ecommerce-business">E-commerce Business</option>
-                                                                                <option value="manufacturing-company">Manufacturing Company</option>
-                                                                                <option value="consulting-firm">Consulting Firm</option>
-                                                                                <option value="healthcare-services">Healthcare Services</option>
-                                                                                <option value="financial-services">Financial Services</option>
-                                                                            </select>
-                                                                        </div>
-                                
-                                                                        <div className="form-group">
-                                                                            <label>Number of Employees who will use Infiniti Suite:</label>
-                                                                            <select value={employeeWillUse} onChange={(e) => setEmployeeWillUse(e.target.value)}>
-                                                                                <option value="1-5">1-5</option>
-                                                                                <option value="6-10">6-10</option>
-                                                                                <option value="11-20">11-20</option>
-                                                                                <option value="21-50">21-50</option>
-                                                                                <option value="51-100">51-100</option>
-                                                                                <option value="100+">100+</option>
-                                                                            </select>
-                                                                        </div> */}
-
+                                    <div className="form-container active" id="step-2">
                                         <div className="form-group">
-                                            <label>Street Address:</label>
-                                            <input type="text" value={streetAdress} onChange={(e) => setStreetAddress(e.target.value)} />
+                                            <label htmlFor="yourPosition">Your Position:</label>
+                                            <input type="text" id="yourPosition" name="yourPosition" value={formData.yourPosition} onChange={handleInputChange} required />
                                         </div>
                                         <div className="form-group">
-                                            <label>City:</label>
-                                            <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                                            <label htmlFor="saleBefore">Have you used any sales tool before:</label>
+                                            <input type="text" id="saleBefore" name="saleBefore" value={formData.saleBefore} onChange={handleInputChange} required />
                                         </div>
                                         <div className="form-group">
-                                            <label>Postal Code:</label>
-                                            <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+                                            <label htmlFor="wantFirst">What do you want to do first:</label>
+                                            <select id="wantFirst" name="wantFirst" value={formData.wantFirst} onChange={handleInputChange} required>
+                                                <option value="Close deals faster">Close deals faster</option>
+                                                <option value="Find new leads">Find new leads</option>
+                                                <option value="Manage relationships better">Manage relationships better</option>
+                                                <option value="Set goals and track progress">Set goals and track progress</option>
+                                                <option value="Set up a team and permissions">Set up a team and permissions</option>
+                                            </select>
                                         </div>
-
-                                        <div className="form-group">
-                                            <label>Country:</label>
-                                            <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label>Timezone:</label>
-                                            {/* <input type="text" value={timeeZone} onChange={(e) => settimeZone(e.target.value)} /> */}
-                                            <div className="dropdown" style={{ zIndex: '3' }}>
-                                                <div>
-                                                    <TimezoneSelect value={items ? items.timeeZone : timeeZone}
-                                                        onChange={handleStartDateChange} />
-                                                </div>
-                                                {/* <Timezone /> */}
-                                            </div>
-                                        </div>
-                                        {/* </div>
-                                                                        {/* <button type="button" onClick={handlePrevious}>
-                                                                            Previous
-                                                                        </button> */}
                                         <div className="nav-buttons">
-                                            <button type="button" onClick={prevStep}>
-                                                Previous
-                                            </button>
+                                            <button type="button" className="prev-btn" onClick={prevStep}>Previous</button>
                                             <button type="button" className="next-btn" onClick={nextStep}>Next</button>
                                         </div>
                                     </div>
                                 )}
 
                                 {currentStep === 3 && (
-                                    <div>
+                                    <div className="form-container active" id="step-3">
                                         <div className="form-group">
-                                            <label>Company Name:</label>
-                                            <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                                            <label htmlFor="companyName">Company Name:</label>
+                                            <input type="text" id="companyName" name="companyName" value={formData.companyName} onChange={handleInputChange} required />
                                         </div>
-                                        {/* <button type="button" onClick={handleNext}>
-                                        Next
-                                    </button> */}
-
-
                                         <div className="form-group">
-                                            <label>Select Company Type:</label>
-                                            <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
+                                            <label htmlFor="noOfEmployees">Number of Employees:</label>
+                                            <select id="noOfEmployees" name="noOfEmployees" value={formData.noOfEmployees} onChange={handleInputChange} required>
+                                                <option value="10-50">10-50</option>
+                                                <option value="50-100">50-100</option>
+                                                <option value="100-200">100-200</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="selectCompanyType">Select Company Type:</label>
+                                            <select id="selectCompanyType" name="selectCompanyType" value={formData.selectCompanyType} onChange={handleInputChange} required>
                                                 <option value="technology-startup">Technology Startup</option>
                                                 <option value="ecommerce-business">E-commerce Business</option>
                                                 <option value="manufacturing-company">Manufacturing Company</option>
@@ -503,50 +387,28 @@ const SignUpForm = () => {
                                                 <option value="financial-services">Financial Services</option>
                                             </select>
                                         </div>
-
                                         <div className="form-group">
-                                            <label>Position (optional):</label>
-                                            <input type="text" value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
-                                        </div>
-                                        {/* <div className="form-group">
-                                        <label>Position (optional):</label>
-                                        <select value={wantFirst} onChange={(e) => setWantFirst(e.target.value)}>
-                                            <option value="Close deals faster">Close deals faster</option>
-                                            <option value="Find new leads">Find new leads</option>
-                                            <option value="Manage relationships better">Manage relationships better</option>
-                                            <option value="Set goals and track progress">Set goals and track progress</option>
-                                            <option value="Set up a team and permissions">Set up a team and permissions</option>
-                                        </select>
-                                    </div> */}
-                                        <div className="form-group">
-                                            <label>Number of Employees (optional):</label>
-                                            <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
+                                            <label htmlFor="employeeWillUse">Number of Employees who will use Infiniti Suite:</label>
+                                            <select id="employeeWillUse" name="employeeWillUse" value={formData.employeeWillUse} onChange={handleInputChange} required>
+                                                <option value="1-10">1-10</option>
                                                 <option value="10-50">10-50</option>
                                                 <option value="50-100">50-100</option>
-                                                <option value="100-200">100-200</option>
                                             </select>
                                         </div>
-                                        {/* <div className="form-group">
-                                        <label>Company Name:</label>
-                                        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-                                    </div> */}
                                         <div className="nav-buttons">
-                                            <button type="button" onClick={prevStep}>
-                                                Previous
-                                            </button>
-                                            <button type="submit" className="next-btn">Submit</button>
+                                            <button type="button" className="prev-btn" onClick={prevStep}>Previous</button>
+                                            {/* <Link to='/login'> */}
+                                                <button type="submit" className="submit-btn">Submit</button>
+                                            {/* </Link> */}
                                         </div>
-                                        {/* <button type="button" onClick={handleNext}>
-                                        Next
-                                    </button> */}
                                     </div>
                                 )}
                             </form>
                         </div>
                     </div>
-                </div >
-            </section >
-            // <Footer />
+                </div>
+            </section>
+            <Footer />
         </>
     );
 };
