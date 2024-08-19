@@ -9,6 +9,7 @@ import caiif from '../assets/images/logo/caiif.png'
 import sstrack from '../assets/images/logo/sstrack.png'
 import clickHr from '../assets/images/logo/image (16).png'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container } from 'react-bootstrap';
+import { LinkOffOutlined } from '@mui/icons-material';
 
 
 
@@ -29,7 +30,7 @@ const Header = () => {
         <div className="row">
           {/* <div className='container-fluid'> */}
           <nav className="navbar navbar-expand-lg navbar-light justify-content-space-between">
-            <Link className="navbar-brand" to="/">
+            <Link className="navbar-brand" to="/header">
               <img src={headerLogo} alt="Logo" />
             </Link>
             <button className="navbar-toggler" type="button" onClick={toggleMenu} style={{ color: 'black' }}>
@@ -39,9 +40,9 @@ const Header = () => {
             </button>
             <div className={`navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
               <ul id="nav" className="navbar-nav mx-auto" style={{ textDecoration: 'none' }}>
-                <li className="nav-item">
-                  <a className="ud-menu-scroll text-black" href="#home" style={{ margin: '0 20px', textDecoration: 'none' }}>Home</a>
-                </li>
+                <div className="nav-item">
+                  <Link to='/header' className="ud-menu-scroll text-black" style={{ margin: '0 20px', textDecoration: 'none' }}>Home</Link>
+                </div>
                 <li className="nav-item nav-item-has-children">
                   <a href="javascript:void(0)" className='text-black' style={{ margin: '0 20px', textDecoration: 'none' }}>Products</a>
                   <ul className="ud-submenu" style={{ textDecoration: 'none', color: 'black' }}>
@@ -123,20 +124,20 @@ const Header = () => {
                     </li>
                   </ul>
                 </li>
-                <li className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
-                  <a className="ud-menu-scroll text-black" href="#about" style={{ textDecoration: 'none' }}>About</a>
-                </li>
-                <li className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
-                  <a className="ud-menu-scroll text-black" href="#pricing" style={{ textDecoration: 'none' }}>Pricing</a>
-                </li>
-                <li className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
+                <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
+                  <a className="ud-menu-scroll text-black" href="/header#about" style={{ textDecoration: 'none' }}>About</a>
+                </div>
+                <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
+                  <a className="ud-menu-scroll text-black" href="/header#pricing" style={{ textDecoration: 'none' }}>Pricing</a>
+                </div>
+                <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
                   <a className="ud-menu-scroll" href="#contact" style={{ textDecoration: 'none' }}>Contact</a>
-                </li>
+                </div>
               </ul>
             </div>
             <div className="navbar-btn d-none d-sm-inline-block">
               <Link to="/login" className="ud-main-btn ud-login-btn text-black" style={{ textDecoration: 'none' }}>Login</Link>
-              <Link className="ud-main-btn ud-white-btn text-white" to="/signup" style={{ textDecoration: 'none' }}>Sign Up</Link>
+              <Link className="ud-main-btn ud-white-btn text-white" to="/signup" style={{ textDecoration: 'none', background: '#3056D3' }}>Sign Up</Link>
             </div>
           </nav>
           {/* </div> */}

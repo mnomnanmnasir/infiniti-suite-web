@@ -77,6 +77,8 @@ function Gmail() {
         setSelectedItem(item);
     };
 
+
+
     // const clientId = "928209376096-euig13evhrr352f9m3cov0t8aq4o4dj7.apps.googleusercontent.com";
     const clientId = "158574328851-8crs82souqrfd29o83fqvck4mj2atru9.apps.googleusercontent.com";
 
@@ -94,7 +96,7 @@ function Gmail() {
         }, (error) => {
             console.error("Failed to init GAPI client", error);
         });
-    } 
+    }
     // gapi.load('client:auth2', initClient)
 
     function getUserInfo() {
@@ -453,7 +455,6 @@ function Gmail() {
                 console.error("Error signing in", error);
             }
         };
-
         console.log(activeEmailLink);
 
         return (
@@ -790,7 +791,7 @@ function Gmail() {
                                         )}
                                     </div>
                                 </div>
-                              </div>
+                            </div>
                         </>
                     )}
                 </>
@@ -799,4 +800,5 @@ function Gmail() {
     );
 }
 
-export default Gmail;   
+export default Gmail;
+

@@ -78,7 +78,7 @@ const Home = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="#about" rel="nofollow noopener" target="_blank" className="ud-main-btn ud-link-btn">
+                    <a href="#features" rel="nofollow noopener" className="ud-main-btn ud-link-btn">
                       Learn More <i className="lni lni-arrow-right"></i>
                     </a>
                   </li>
@@ -110,8 +110,8 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-xl-3 col-lg-3 col-sm-6">
+          <div className="row justify-content-space-between">
+            <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
                 <div className="ud-feature-icon">
                   <img src={sstrack} style={{ width: '50px' }} alt="SS-Track" />
@@ -127,7 +127,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-lg-3 col-sm-6">
+            <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".15s">
                 <div className="ud-feature-icon">
                   <img src={clickHr} style={{ width: '50px' }} alt="Click HR" />
@@ -143,7 +143,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-lg-3 col-sm-6">
+            <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".2s">
                 <div className="ud-feature-icon">
                   <img src={verdeBook} style={{ width: '50px' }} alt="Verdebook" />
@@ -213,7 +213,7 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="ud-section-title mx-auto text-center">
-                <span>Pricing</span>
+                {/* <span>Pricing</span> */}
                 <h2>Our Pricing Plans</h2>
                 <p>
                   Here are three packages of services that you could offer as part of your comprehensive suite of productivity tools and SaaS applications.
@@ -250,7 +250,7 @@ const Home = () => {
                     <li>Basic Productivity Analytics</li>
                   </ul>
                   <ul style={{ color: 'grey' }}>
-                    <li className="product-title">CAIIF:</li>
+                    {/* <li className="product-title">CAIIF:</li> */}
                     <li>Full Access</li>
                   </ul>
                 </div>
@@ -286,7 +286,7 @@ const Home = () => {
                     <li>Integration with Project Management Tools</li>
                   </ul>
                   <ul style={{ color: 'grey' }}>
-                    <li className="product-title">CAIIF:</li>
+                    {/* <li className="product-title">CAIIF:</li> */}
                     <li>Full Access</li>
                   </ul>
                 </div>
@@ -321,7 +321,7 @@ const Home = () => {
                     <li>API Access for Custom Integrations</li>
                   </ul>
                   <ul style={{ color: 'grey' }}>
-                    <li className="product-title">CAIIF:</li>
+                    {/* <li className="product-title">CAIIF:</li> */}
                     <li>Full Access</li>
                   </ul>
                 </div>
@@ -344,7 +344,7 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="ud-section-title text-center mx-auto">
-                <span>FAQ</span>
+                {/* <span>FAQ</span> */}
                 <h2>Any Questions? Answered</h2>
                 <p>
                   Below are common questions and answers about the Infiniti Suite.
@@ -427,6 +427,7 @@ const Home = () => {
                       <i className="lni lni-chevron-down"></i>
                     </span>
                     <span>What kind of support can I expect after purchasing the Infiniti Suite?</span>
+                    {/* <span>What kind of support can I expect after purchasing?</span> */}
                   </button>
                   <div id="collapseFive" className="accordion-collapse collapse">
                     <div className="ud-faq-body">
@@ -442,6 +443,8 @@ const Home = () => {
                       <i className="lni lni-chevron-down"></i>
                     </span>
                     <span>How can I be sure that the Infiniti Suite will address my specific business needs?</span>
+                    {/* <span>How can I be sure that the Infiniti Suite will address my specific business needs?</span> */}
+
                   </button>
                   <div id="collapseSix" className="accordion-collapse collapse">
                     <div className="ud-faq-body">
@@ -595,7 +598,7 @@ const Home = () => {
                     <textarea name="message" rows="1" placeholder="type your message here"></textarea>
                   </div>
                   <div class="ud-form-group mb-0">
-                    <button type="submit" class="ud-main-btn">
+                    <button type="submit" className="ud-main-btn">
                       Send Message
                     </button>
                   </div>
