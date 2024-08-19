@@ -6,6 +6,7 @@ import verdeBook from '../assets/images/logo/verdebook.png'
 import caiif from '../assets/images/logo/caiif.png'
 import sstrack from '../assets/images/logo/sstrack.png'
 import clickHr from '../assets/images/logo/image (16).png'
+import { Link } from 'react-router-dom';
 
 
 
@@ -45,16 +46,16 @@ const Footer = () => {
                                     <h5 className="ud-widget-title">About Us</h5>
                                     <ul className="ud-widget-links">
                                         <li>
-                                            <a href="#Home">Home</a>
+                                            <a href="/header">Home</a>
                                         </li>
                                         <li>
-                                            <a href="#About">About</a>
+                                            <a href="/header#about">About</a>
                                         </li>
                                         <li>
-                                            <a href="#Pricing">Pricing</a>
+                                            <a href="/header#pricing">Pricing</a>
                                         </li>
                                         <li>
-                                            <a href="#Contact">Contact</a>
+                                            <a href="/header#contact">Contact</a>
                                         </li>
                                     </ul>
                                 </div>

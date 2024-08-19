@@ -38,10 +38,10 @@ const Login = () => {
 
             if (response.ok) {
                 localStorage.setItem("email", email)
-        localStorage.setItem("password", password)
+                localStorage.setItem("password", password)
                 toast.success('Login successfully!');
                 // Redirect to dashboard or any other route
-              
+
                 navigate('/dashboard'); // Replace '/dashboard' with your desired route
                 event.target.reset(); // Reset form fields
             }
@@ -86,6 +86,7 @@ const Login = () => {
                                 </div> */}
                                 <form onSubmit={handleSubmit}>
                                     <div className="ud-login-form">
+                                        <label className='label-left'>Email:</label>
                                         <div className="ud-form-group">
                                             <input
                                                 id="email_input"
@@ -98,6 +99,7 @@ const Login = () => {
                                             />
                                         </div>
                                         <div className="ud-form-group">
+                                            <label className='label-left'>Password:</label>
                                             <input
                                                 id="password_input"
                                                 type="password"
@@ -108,7 +110,7 @@ const Login = () => {
                                                 required
                                             />
                                         </div>
-                                        <div className="ud-form-group w-100" style={{marginLeft: '2%'}}>
+                                        <div className="ud-form-group w-100" style={{ marginLeft: '2%' }}>
                                             <button className="ud-main-btn w-100" type="submit">
                                                 Login
                                             </button>

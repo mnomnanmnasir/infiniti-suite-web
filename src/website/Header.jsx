@@ -9,6 +9,7 @@ import caiif from '../assets/images/logo/caiif.png'
 import sstrack from '../assets/images/logo/sstrack.png'
 import clickHr from '../assets/images/logo/image (16).png'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container } from 'react-bootstrap';
+import { LinkOffOutlined } from '@mui/icons-material';
 
 
 
@@ -29,7 +30,7 @@ const Header = () => {
         <div className="row">
           {/* <div className='container-fluid'> */}
           <nav className="navbar navbar-expand-lg navbar-light justify-content-space-between">
-            <Link className="navbar-brand" to="/">
+            <Link className="navbar-brand" to="/header">
               <img src={headerLogo} alt="Logo" />
             </Link>
             <button className="navbar-toggler" type="button" onClick={toggleMenu} style={{ color: 'black' }}>
@@ -124,10 +125,10 @@ const Header = () => {
                   </ul>
                 </li>
                 <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
-                  <a className="ud-menu-scroll text-black" href="#about" style={{ textDecoration: 'none' }}>About</a>
+                  <a className="ud-menu-scroll text-black" href="/header#about" style={{ textDecoration: 'none' }}>About</a>
                 </div>
                 <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
-                  <a className="ud-menu-scroll text-black" href="#pricing" style={{ textDecoration: 'none' }}>Pricing</a>
+                  <a className="ud-menu-scroll text-black" href="/header#pricing" style={{ textDecoration: 'none' }}>Pricing</a>
                 </div>
                 <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
                   <a className="ud-menu-scroll" href="#contact" style={{ textDecoration: 'none' }}>Contact</a>
