@@ -38,7 +38,7 @@ const App = () => {
           <Route path='/' element={<Layout />} >
             <Route path='/' element={<Gmail />} />
             <Route path='/:token' element={<Gmail />} />
-            <Route path='/deals' element={<Deals />} />
+            <Route path='/deals' element={<Deals /> }/>
             <Route path='/docs' element={<Docs />} />
             <Route path='/sstrack' element={<SSTrack />} />
             <Route path='/verdebooks' element={<Verdebooks />} />

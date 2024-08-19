@@ -94,7 +94,7 @@ function Gmail() {
         }, (error) => {
             console.error("Failed to init GAPI client", error);
         });
-    }
+    } 
     // gapi.load('client:auth2', initClient)
 
     function getUserInfo() {
@@ -453,6 +453,7 @@ function Gmail() {
                 console.error("Error signing in", error);
             }
         };
+
         console.log(activeEmailLink);
 
         return (
@@ -789,7 +790,7 @@ function Gmail() {
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                              </div>
                         </>
                     )}
                 </>
@@ -798,4 +799,4 @@ function Gmail() {
     );
 }
 
-export default Gmail;
+export default Gmail;   

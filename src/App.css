@@ -2705,8 +2705,7 @@ body {
   font-weight: normal;
   font-style: normal;
   color: var(--body-color);
-  overflow-y: scroll;
-  
+  overflow: auto;
   
 }
 
@@ -2715,7 +2714,7 @@ body {
   padding: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  /* overflow-y: scroll; */
+  /* overflow-y: hidden; */
   /* overflow-x: hidden; */
 }
 
@@ -2845,7 +2844,6 @@ p {
 .ud-main-btn:hover {
   color: var(--white);
   background: var(--heading-color);
-  
 }
 
 @media (max-width: 767px) {
@@ -3179,9 +3177,7 @@ p {
 
 .navbar-btn .ud-white-btn:hover {
   background: blue;
-  /* color: var(--heading-color); */
-  background: #007ab9;
-
+  color: var(--primary-color);
 }
 
 .sticky .navbar-toggler .toggler-icon {
@@ -4051,7 +4047,6 @@ p {
 .ud-contact {
   padding: 120px 0px;
   position: relative;
-  /* overflow: auto; */
 }
 
 @media (max-width: 767px) {
