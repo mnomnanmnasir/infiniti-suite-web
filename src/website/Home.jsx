@@ -4,10 +4,10 @@ import headerLogo from '../assets/images/logo/Infinity Logo Final Blue.png'
 import heroBanner from '../assets/images/banner/crm-system-4487382-3722743.png'
 import dootedImage from '../assets/images/hero/dotted-shape.svg'
 import brandHero from '../assets/images/logo2.png'
-import verdeBook from '../assets/images/logo/verdebook.png'
+import verdeBook from '../assets/images/logo/verdebook1.png'
 import caiif from '../assets/images/logo/caiif.png'
-import sstrack from '../assets/images/logo/sstrack.png'
-import clickHr from '../assets/images/logo/image (16).png'
+import sstrack from '../assets/images/logo/sstrack1.ico'
+import clickHr from '../assets/images/logo/clickHr1.png'
 import aboutImg from '../assets/images/about/about-image.svg'
 import faqImg from '../assets/images/faq/shape.svg'
 import footerImg1 from '../assets/images/footer/shape-1.svg'
@@ -46,7 +46,6 @@ const Home = () => {
     });
   };
 
-
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // // Function to toggle the menu open/close
@@ -72,9 +71,9 @@ const Home = () => {
                 <ul className="ud-hero-buttons">
                   <li>
                     <Link to='/signup'>
-                    <a rel="nofollow noopener" target="_blank" className="ud-main-btn ud-white-btn" style={{ textDecoration: 'none', color: 'black' }}>
-                      Sign Up Now
-                    </a>
+                      <a rel="nofollow noopener" target="_blank" className="ud-main-btn ud-white-btn" style={{ textDecoration: 'none', color: 'black' }}>
+                        Sign Up Now
+                      </a>
                     </Link>
                   </li>
                   <li>
@@ -114,11 +113,11 @@ const Home = () => {
             <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
                 <div className="ud-feature-icon">
-                  <img src={sstrack} style={{ width: '50px' }} alt="SS-Track" />
+                  <img src={sstrack} style={{ width: '55px' }} alt="SS-Track" />
                 </div>
                 <div className="ud-feature-content">
-                  <h3 className="ud-feature-title">SS-Track</h3>
-                  <p className="ud-feature-desc">
+                  <h3 className="ud-feature-title fs-4">SS-Track</h3>
+                  <p className="ud-feature-desc" style={{ fontSize: '15px' }}>
                     A manager invites employees to sstrack.io, where they download a streamlined desktop application, choose a project to work on, and hit the Start button. This initiates tracking, sending data to the web instantly until they press the Stop button.
                   </p>
                   <a href="https://sstrack.io/" className="ud-feature-link">
@@ -130,11 +129,11 @@ const Home = () => {
             <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".15s">
                 <div className="ud-feature-icon">
-                  <img src={clickHr} style={{ width: '50px' }} alt="Click HR" />
+                  <img src={clickHr} style={{ width: '100px' }} alt="Click HR" />
                 </div>
                 <div className="ud-feature-content">
-                  <h3 className="ud-feature-title">Click HR</h3>
-                  <p className="ud-feature-desc">
+                  <h3 className="ud-feature-title fs-4" style={{ fontSize: '15px' }}>Click HR</h3>
+                  <p className="ud-feature-desc" style={{ fontSize: '15px' }}>
                     We combine advanced technology with deep industry insights to redefine how companies recruit top talent. Our intuitive platform simplifies hiring while ensuring precision and efficiency in connecting the right candidates with the right opportunities.
                   </p>
                   <a href="https://www.click-hr.com/" className="ud-feature-link">
@@ -146,11 +145,11 @@ const Home = () => {
             <div className="col-xl-4 col-lg-4 col-sm-6">
               <div className="ud-single-feature wow fadeInUp" data-wow-delay=".2s">
                 <div className="ud-feature-icon">
-                  <img src={verdeBook} style={{ width: '50px' }} alt="Verdebook" />
+                  <img src={verdeBook} style={{ width: '60px' }} alt="Verdebook" />
                 </div>
                 <div className="ud-feature-content">
-                  <h3 className="ud-feature-title">Verdebook</h3>
-                  <p className="ud-feature-desc">
+                  <h3 className="ud-feature-title fs-4">Verdebook</h3>
+                  <p className="ud-feature-desc" style={{ fontSize: '15px' }}>
                     Our Payroll software is easy to use, with an intuitive interface that makes it easy for you to find the information you need, and for your candidates to fill out their profiles quickly.
                   </p>
                   <a href="https://verdebooks.com/" className="ud-feature-link">
@@ -549,7 +548,7 @@ const Home = () => {
                 <div class="ud-contact-title">
                   <span>CONTACT US</span>
                   <h2>
-                    Let’s talk about <br />
+                    Let’s talk <br />
                     Love to hear from you!
                   </h2>
                 </div>
@@ -582,23 +581,23 @@ const Home = () => {
                 <h3 class="ud-contact-form-title">Send us a Message</h3>
                 <form class="ud-contact-form">
                   <div class="ud-form-group">
-                    <label for="fullName">Full Name*</label>
+                    <label for="fullName" style={{ fontSize: '20px' }}>Full Name*</label>
                     <input type="text" name="fullName" placeholder="Your Name" />
                   </div>
                   <div class="ud-form-group">
-                    <label for="email">Email*</label>
+                    <label for="email" style={{ fontSize: '20px' }}>Email*</label>
                     <input type="email" name="email" placeholder="Your Email" />
                   </div>
                   <div class="ud-form-group">
-                    <label for="phone">Phone*</label>
+                    <label for="phone" style={{ fontSize: '20px' }}>Phone Number*</label>
                     <input type="text" name="phone" placeholder="Phone Number" />
                   </div>
                   <div class="ud-form-group">
-                    <label for="message">Message*</label>
-                    <textarea name="message" rows="1" placeholder="type your message here"></textarea>
+                    <label for="message" style={{ fontSize: '20px' }}>Message*</label>
+                    <textarea name="message" rows="1" placeholder="Enter your message"></textarea>
                   </div>
                   <div class="ud-form-group mb-0">
-                    <button type="submit" className="ud-main-btn">
+                    <button type="submit" class="ud-main-btn">
                       Send Message
                     </button>
                   </div>

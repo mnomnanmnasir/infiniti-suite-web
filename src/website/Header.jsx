@@ -4,12 +4,11 @@ import headerLogo from '../assets/images/logo/Infinity Logo Final Blue.png'
 import heroBanner from '../assets/images/banner/crm-system-4487382-3722743.png'
 import dootedImage from '../assets/images/hero/dotted-shape.svg'
 import brandHero from '../assets/images/logo.png'
-import verdeBook from '../assets/images/logo/verdebook.png'
+import verdeBook from '../assets/images/logo/verdebook1.png'
 import caiif from '../assets/images/logo/caiif.png'
-import sstrack from '../assets/images/logo/sstrack.png'
-import clickHr from '../assets/images/logo/image (16).png'
+import sstrack from '../assets/images/logo/sstrack1.ico'
+import clickHr from '../assets/images/logo/clickHr1.png'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container } from 'react-bootstrap';
-import { LinkOffOutlined } from '@mui/icons-material';
 
 
 
@@ -41,14 +40,14 @@ const Header = () => {
             <div className={`navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
               <ul id="nav" className="navbar-nav mx-auto" style={{ textDecoration: 'none' }}>
                 <div className="nav-item">
-                  <Link to='/header' className="ud-menu-scroll text-black" style={{ margin: '0 20px', textDecoration: 'none' }}>Home</Link>
+                  <a href='/header' id="#home" className="ud-menu-scroll text-black" style={{ margin: '0 20px', textDecoration: 'none' }}>Home</a>
                 </div>
                 <li className="nav-item nav-item-has-children">
                   <a href="javascript:void(0)" className='text-black' style={{ margin: '0 20px', textDecoration: 'none' }}>Products</a>
                   <ul className="ud-submenu" style={{ textDecoration: 'none', color: 'black' }}>
                     <li className="ud-submenu-item">
                       <div className="row">
-                        <div className="col-xl-4 col-lg-4 col-sm-6">
+                        <div className="col-xl-4 col-lg-4 col-sm-6" style={{ textDecoration: 'none' }}>
                           <a href="https://sstrack.io/">
                             <div className="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
                               <div className="ud-feature-icon">
@@ -131,13 +130,13 @@ const Header = () => {
                   <a className="ud-menu-scroll text-black" href="/header#pricing" style={{ textDecoration: 'none' }}>Pricing</a>
                 </div>
                 <div className="nav-item" style={{ margin: '0 20px', textDecoration: 'none' }}>
-                  <a className="ud-menu-scroll" href="#contact" style={{ textDecoration: 'none' }}>Contact</a>
+                  <a className="ud-menu-scroll" href="/header#contact" style={{ textDecoration: 'none' }}>Contact</a>
                 </div>
               </ul>
             </div>
             <div className="navbar-btn d-none d-sm-inline-block">
-              <Link to="/login" className="ud-main-btn ud-login-btn text-black" style={{ textDecoration: 'none' }}>Login</Link>
-              <Link className="ud-main-btn ud-white-btn text-white" to="/signup" style={{ textDecoration: 'none', background: '#3056D3' }}>Sign Up</Link>
+              <a href="/login" id='#login' className="ud-main-btn ud-login-btn text-black" style={{ textDecoration: 'none' }}>Login</a>
+              <a className="ud-main-btn ud-white-btn text-white" href="/signup" id='#isgnup' style={{ textDecoration: 'none', background: '#3056D3' }}>Sign Up</a>
             </div>
           </nav>
           {/* </div> */}

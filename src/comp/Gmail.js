@@ -32,9 +32,9 @@ function Gmail() {
     const password = searchParams.get('password');
 
     useEffect(() => {
-        localStorage.setItem("auth_token", params.token)
-        localStorage.setItem("email", email)
-        localStorage.setItem("password", password)
+        // localStorage.setItem("auth_token", params.token)
+        // localStorage.setItem("email", email)
+        // localStorage.setItem("password", password)
     }, [])
 
     const [items, setItems] = useState([

@@ -1,313 +1,230 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import TimezoneSelect from 'react-timezone-select';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import { FerrisWheelSpinner } from "react-spinner-overlay";
 
 
 const countries = [
-    { name: "Afghanistan", code: "AF", phone: 93 },
-    { name: "Aland Islands", code: "AX", phone: 358 },
-    { name: "Albania", code: "AL", phone: 355 },
-    { name: "Algeria", code: "DZ", phone: 213 },
-    { name: "American Samoa", code: "AS", phone: 1684 },
-    { name: "Andorra", code: "AD", phone: 376 },
-    { name: "Angola", code: "AO", phone: 244 },
-    { name: "Anguilla", code: "AI", phone: 1264 },
-    { name: "Antarctica", code: "AQ", phone: 672 },
-    { name: "Antigua and Barbuda", code: "AG", phone: 1268 },
-    { name: "Argentina", code: "AR", phone: 54 },
-    { name: "Armenia", code: "AM", phone: 374 },
-    { name: "Aruba", code: "AW", phone: 297 },
-    { name: "Australia", code: "AU", phone: 61 },
-    { name: "Austria", code: "AT", phone: 43 },
-    { name: "Azerbaijan", code: "AZ", phone: 994 },
-    { name: "Bahamas", code: "BS", phone: 1242 },
-    { name: "Bahrain", code: "BH", phone: 973 },
-    { name: "Bangladesh", code: "BD", phone: 880 },
-    { name: "Barbados", code: "BB", phone: 1246 },
-    { name: "Belarus", code: "BY", phone: 375 },
-    { name: "Belgium", code: "BE", phone: 32 },
-    { name: "Belize", code: "BZ", phone: 501 },
-    { name: "Benin", code: "BJ", phone: 229 },
-    { name: "Bermuda", code: "BM", phone: 1441 },
-    { name: "Bhutan", code: "BT", phone: 975 },
-    { name: "Bolivia", code: "BO", phone: 591 },
-    { name: "Bonaire, Sint Eustatius and Saba", code: "BQ", phone: 599 },
-    { name: "Bosnia and Herzegovina", code: "BA", phone: 387 },
-    { name: "Botswana", code: "BW", phone: 267 },
-    { name: "Bouvet Island", code: "BV", phone: 55 },
-    { name: "Brazil", code: "BR", phone: 55 },
-    { name: "British Indian Ocean Territory", code: "IO", phone: 246 },
-    { name: "Brunei Darussalam", code: "BN", phone: 673 },
-    { name: "Bulgaria", code: "BG", phone: 359 },
-    { name: "Burkina Faso", code: "BF", phone: 226 },
-    { name: "Burundi", code: "BI", phone: 257 },
-    { name: "Cambodia", code: "KH", phone: 855 },
-    { name: "Cameroon", code: "CM", phone: 237 },
-    { name: "Canada", code: "CA", phone: 1 },
-    { name: "Cape Verde", code: "CV", phone: 238 },
-    { name: "Cayman Islands", code: "KY", phone: 1345 },
-    { name: "Central African Republic", code: "CF", phone: 236 },
-    { name: "Chad", code: "TD", phone: 235 },
-    { name: "Chile", code: "CL", phone: 56 },
-    { name: "China", code: "CN", phone: 86 },
-    { name: "Christmas Island", code: "CX", phone: 61 },
-    { name: "Cocos (Keeling) Islands", code: "CC", phone: 672 },
-    { name: "Colombia", code: "CO", phone: 57 },
-    { name: "Comoros", code: "KM", phone: 269 },
-    { name: "Congo", code: "CG", phone: 242 },
-    { name: "Congo, Democratic Republic of the Congo", code: "CD", phone: 242 },
-    { name: "Cook Islands", code: "CK", phone: 682 },
-    { name: "Costa Rica", code: "CR", phone: 506 },
-    { name: "Cote D'Ivoire", code: "CI", phone: 225 },
-    { name: "Croatia", code: "HR", phone: 385 },
-    { name: "Cuba", code: "CU", phone: 53 },
-    { name: "Curacao", code: "CW", phone: 599 },
-    { name: "Cyprus", code: "CY", phone: 357 },
-    { name: "Czech Republic", code: "CZ", phone: 420 },
-    { name: "Denmark", code: "DK", phone: 45 },
-    { name: "Djibouti", code: "DJ", phone: 253 },
-    { name: "Dominica", code: "DM", phone: 1767 },
-    { name: "Dominican Republic", code: "DO", phone: 1809 },
-    { name: "Ecuador", code: "EC", phone: 593 },
-    { name: "Egypt", code: "EG", phone: 20 },
-    { name: "El Salvador", code: "SV", phone: 503 },
-    { name: "Equatorial Guinea", code: "GQ", phone: 240 },
-    { name: "Eritrea", code: "ER", phone: 291 },
-    { name: "Estonia", code: "EE", phone: 372 },
-    { name: "Ethiopia", code: "ET", phone: 251 },
-    { name: "Falkland Islands (Malvinas)", code: "FK", phone: 500 },
-    { name: "Faroe Islands", code: "FO", phone: 298 },
-    { name: "Fiji", code: "FJ", phone: 679 },
-    { name: "Finland", code: "FI", phone: 358 },
-    { name: "France", code: "FR", phone: 33 },
-    { name: "French Guiana", code: "GF", phone: 594 },
-    { name: "French Polynesia", code: "PF", phone: 689 },
-    { name: "French Southern Territories", code: "TF", phone: 262 },
-    { name: "Gabon", code: "GA", phone: 241 },
-    { name: "Gambia", code: "GM", phone: 220 },
-    { name: "Georgia", code: "GE", phone: 995 },
-    { name: "Germany", code: "DE", phone: 49 },
-    { name: "Ghana", code: "GH", phone: 233 },
-    { name: "Gibraltar", code: "GI", phone: 350 },
-    { name: "Greece", code: "GR", phone: 30 },
-    { name: "Greenland", code: "GL", phone: 299 },
-    { name: "Grenada", code: "GD", phone: 1473 },
-    { name: "Guadeloupe", code: "GP", phone: 590 },
-    { name: "Guam", code: "GU", phone: 1671 },
-    { name: "Guatemala", code: "GT", phone: 502 },
-    { name: "Guernsey", code: "GG", phone: 44 },
-    { name: "Guinea", code: "GN", phone: 224 },
-    { name: "Guinea-Bissau", code: "GW", phone: 245 },
-    { name: "Guyana", code: "GY", phone: 592 },
-    { name: "Haiti", code: "HT", phone: 509 },
-    { name: "Heard Island and McDonald Islands", code: "HM", phone: 0 },
-    { name: "Holy See (Vatican City State)", code: "VA", phone: 39 },
-    { name: "Honduras", code: "HN", phone: 504 },
-    { name: "Hong Kong", code: "HK", phone: 852 },
-    { name: "Hungary", code: "HU", phone: 36 },
-    { name: "Iceland", code: "IS", phone: 354 },
-    { name: "India", code: "IN", phone: 91 },
-    { name: "Indonesia", code: "ID", phone: 62 },
-    { name: "Iran, Islamic Republic of", code: "IR", phone: 98 },
-    { name: "Iraq", code: "IQ", phone: 964 },
-    { name: "Ireland", code: "IE", phone: 353 },
-    { name: "Isle of Man", code: "IM", phone: 44 },
-    { name: "Israel", code: "IL", phone: 972 },
-    { name: "Italy", code: "IT", phone: 39 },
-    { name: "Jamaica", code: "JM", phone: 1876 },
-    { name: "Japan", code: "JP", phone: 81 },
-    { name: "Jersey", code: "JE", phone: 44 },
-    { name: "Jordan", code: "JO", phone: 962 },
-    { name: "Kazakhstan", code: "KZ", phone: 7 },
-    { name: "Kenya", code: "KE", phone: 254 },
-    { name: "Kiribati", code: "KI", phone: 686 },
-    { name: "Korea, Democratic People's Republic of", code: "KP", phone: 850 },
-    { name: "Korea, Republic of", code: "KR", phone: 82 },
-    { name: "Kosovo", code: "XK", phone: 383 },
-    { name: "Kuwait", code: "KW", phone: 965 },
-    { name: "Kyrgyzstan", code: "KG", phone: 996 },
-    { name: "Lao People's Democratic Republic", code: "LA", phone: 856 },
-    { name: "Latvia", code: "LV", phone: 371 },
-    { name: "Lebanon", code: "LB", phone: 961 },
-    { name: "Lesotho", code: "LS", phone: 266 },
-    { name: "Liberia", code: "LR", phone: 231 },
-    { name: "Libyan Arab Jamahiriya", code: "LY", phone: 218 },
-    { name: "Liechtenstein", code: "LI", phone: 423 },
-    { name: "Lithuania", code: "LT", phone: 370 },
-    { name: "Luxembourg", code: "LU", phone: 352 },
-    { name: "Macao", code: "MO", phone: 853 },
-    { name: "Macedonia, the Former Yugoslav Republic of", code: "MK", phone: 389 },
-    { name: "Madagascar", code: "MG", phone: 261 },
-    { name: "Malawi", code: "MW", phone: 265 },
-    { name: "Malaysia", code: "MY", phone: 60 },
-    { name: "Maldives", code: "MV", phone: 960 },
-    { name: "Mali", code: "ML", phone: 223 },
-    { name: "Malta", code: "MT", phone: 356 },
-    { name: "Marshall Islands", code: "MH", phone: 692 },
-    { name: "Martinique", code: "MQ", phone: 596 },
-    { name: "Mauritania", code: "MR", phone: 222 },
-    { name: "Mauritius", code: "MU", phone: 230 },
-    { name: "Mayotte", code: "YT", phone: 262 },
-    { name: "Mexico", code: "MX", phone: 52 },
-    { name: "Micronesia, Federated States of", code: "FM", phone: 691 },
-    { name: "Moldova, Republic of", code: "MD", phone: 373 },
-    { name: "Monaco", code: "MC", phone: 377 },
-    { name: "Mongolia", code: "MN", phone: 976 },
-    { name: "Montenegro", code: "ME", phone: 382 },
-    { name: "Montserrat", code: "MS", phone: 1664 },
-    { name: "Morocco", code: "MA", phone: 212 },
-    { name: "Mozambique", code: "MZ", phone: 258 },
-    { name: "Myanmar", code: "MM", phone: 95 },
-    { name: "Namibia", code: "NA", phone: 264 },
-    { name: "Nauru", code: "NR", phone: 674 },
-    { name: "Nepal", code: "NP", phone: 977 },
-    { name: "Netherlands", code: "NL", phone: 31 },
-    { name: "Netherlands Antilles", code: "AN", phone: 599 },
-    { name: "New Caledonia", code: "NC", phone: 687 },
-    { name: "New Zealand", code: "NZ", phone: 64 },
-    { name: "Nicaragua", code: "NI", phone: 505 },
-    { name: "Niger", code: "NE", phone: 227 },
-    { name: "Nigeria", code: "NG", phone: 234 },
-    { name: "Niue", code: "NU", phone: 683 },
-    { name: "Norfolk Island", code: "NF", phone: 672 },
-    { name: "Northern Mariana Islands", code: "MP", phone: 1670 },
-    { name: "Norway", code: "NO", phone: 47 },
-    { name: "Oman", code: "OM", phone: 968 },
-    { name: "Pakistan", code: "PK", phone: 92 },
-    { name: "Palau", code: "PW", phone: 680 },
-    { name: "Palestinian Territory, Occupied", code: "PS", phone: 970 },
-    { name: "Panama", code: "PA", phone: 507 },
-    { name: "Papua New Guinea", code: "PG", phone: 675 },
-    { name: "Paraguay", code: "PY", phone: 595 },
-    { name: "Peru", code: "PE", phone: 51 },
-    { name: "Philippines", code: "PH", phone: 63 },
-    { name: "Pitcairn", code: "PN", phone: 64 },
-    { name: "Poland", code: "PL", phone: 48 },
-    { name: "Portugal", code: "PT", phone: 351 },
-    { name: "Puerto Rico", code: "PR", phone: 1787 },
-    { name: "Qatar", code: "QA", phone: 974 },
-    { name: "Reunion", code: "RE", phone: 262 },
-    { name: "Romania", code: "RO", phone: 40 },
-    { name: "Russian Federation", code: "RU", phone: 7 },
-    { name: "Rwanda", code: "RW", phone: 250 },
-    { name: "Saint Barthelemy", code: "BL", phone: 590 },
-    { name: "Saint Helena", code: "SH", phone: 290 },
-    { name: "Saint Kitts and Nevis", code: "KN", phone: 1869 },
-    { name: "Saint Lucia", code: "LC", phone: 1758 },
-    { name: "Saint Martin", code: "MF", phone: 590 },
-    { name: "Saint Pierre and Miquelon", code: "PM", phone: 508 },
-    { name: "Saint Vincent and the Grenadines", code: "VC", phone: 1784 },
-    { name: "Samoa", code: "WS", phone: 684 },
-    { name: "San Marino", code: "SM", phone: 378 },
-    { name: "Sao Tome and Principe", code: "ST", phone: 239 },
-    { name: "Saudi Arabia", code: "SA", phone: 966 },
-    { name: "Senegal", code: "SN", phone: 221 },
-    { name: "Serbia", code: "RS", phone: 381 },
-    { name: "Serbia and Montenegro", code: "CS", phone: 381 },
-    { name: "Seychelles", code: "SC", phone: 248 },
-    { name: "Sierra Leone", code: "SL", phone: 232 },
-    { name: "Singapore", code: "SG", phone: 65 },
-    { name: "St Martin", code: "SX", phone: 721 },
-    { name: "Slovakia", code: "SK", phone: 421 },
-    { name: "Slovenia", code: "SI", phone: 386 },
-    { name: "Solomon Islands", code: "SB", phone: 677 },
-    { name: "Somalia", code: "SO", phone: 252 },
-    { name: "South Africa", code: "ZA", phone: 27 },
-    { name: "South Georgia and the South Sandwich Islands", code: "GS", phone: 500 },
-    { name: "South Sudan", code: "SS", phone: 211 },
-    { name: "Spain", code: "ES", phone: 34 },
-    { name: "Sri Lanka", code: "LK", phone: 94 },
-    { name: "Sudan", code: "SD", phone: 249 },
-    { name: "Suriname", code: "SR", phone: 597 },
-    { name: "Svalbard and Jan Mayen", code: "SJ", phone: 47 },
-    { name: "Swaziland", code: "SZ", phone: 268 },
-    { name: "Sweden", code: "SE", phone: 46 },
-    { name: "Switzerland", code: "CH", phone: 41 },
-    { name: "Syrian Arab Republic", code: "SY", phone: 963 },
-    { name: "Taiwan, Province of China", code: "TW", phone: 886 },
-    { name: "Tajikistan", code: "TJ", phone: 992 },
-    { name: "Tanzania, United Republic of", code: "TZ", phone: 255 },
-    { name: "Thailand", code: "TH", phone: 66 },
-    { name: "Timor-Leste", code: "TL", phone: 670 },
-    { name: "Togo", code: "TG", phone: 228 },
-    { name: "Tokelau", code: "TK", phone: 690 },
-    { name: "Tonga", code: "TO", phone: 676 },
-    { name: "Trinidad and Tobago", code: "TT", phone: 1868 },
-    { name: "Tunisia", code: "TN", phone: 216 },
-    { name: "Turkey", code: "TR", phone: 90 },
-    { name: "Turkmenistan", code: "TM", phone: 7370 },
-    { name: "Turks and Caicos Islands", code: "TC", phone: 1649 },
-    { name: "Tuvalu", code: "TV", phone: 688 },
-    { name: "Uganda", code: "UG", phone: 256 },
-    { name: "Ukraine", code: "UA", phone: 380 },
-    { name: "United Arab Emirates", code: "AE", phone: 971 },
-    { name: "United Kingdom", code: "GB", phone: 44 },
-    { name: "United States", code: "US", phone: 1 },
-    { name: "United States Minor Outlying Islands", code: "UM", phone: 1 },
-    { name: "Uruguay", code: "UY", phone: 598 },
-    { name: "Uzbekistan", code: "UZ", phone: 998 },
-    { name: "Vanuatu", code: "VU", phone: 678 },
-    { name: "Venezuela", code: "VE", phone: 58 },
-    { name: "Viet Nam", code: "VN", phone: 84 },
-    { name: "Virgin Islands, British", code: "VG", phone: 1284 },
-    { name: "Virgin Islands, U.s.", code: "VI", phone: 1340 },
-    { name: "Wallis and Futuna", code: "WF", phone: 681 },
-    { name: "Western Sahara", code: "EH", phone: 212 },
-    { name: "Yemen", code: "YE", phone: 967 },
-    { name: "Zambia", code: "ZM", phone: 260 },
-    { name: "Zimbabwe", code: "ZW", phone: 263 }
-]
+    { name: 'Afghanistan', code: 'AF', phone: 93 },
+    { name: 'Aland Islands', code: 'AX', phone: 358 },
+    { name: 'Albania', code: 'AL', phone: 355 },
+    { name: 'Algeria', code: 'DZ', phone: 213 },
+    { name: 'American Samoa', code: 'AS', phone: 1684 },
+    // ...add all countries
+];
+
+
+const CompanyTypeSelect = ({ value, onChange, options }) => {
+    return (
+        <select value={value} onChange={onChange}>
+            {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                    {option.label}
+                </option>
+            ))}
+        </select>
+    );
+};
 
 
 const SignUpForm = () => {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [phone, setPhone] = useState("");
-
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [options, setOptions] = useState([]);
+    const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
-        password: '',
-        phoneNumber: '',
-        yourPosition: '',
-        saleBefore: '',
-        wantFirst: '',
-        companyName: '',
-        noOfEmployees: '',
-        selectCompanyType: '',
-        employeeWillUse: '',
-        address: '',
-        postalCode: '',
-        country: '',
     });
 
 
-    const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
+    useEffect(() => {
+        const optionsList = countries.map((country) => (
+            <li key={country.code} className="option">
+                <div>
+                    <span className="iconify" data-icon={`flag:`} />
+                    {/* <span className="country-name">{country.name}</span> */}
+                </div>
+                <strong>+{country.phone}</strong>
+            </li>
+        ));
+        setOptions(optionsList);
+    }, []);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "phoneNumber" && e.target.tagName === "SELECT") {
-            const selectedIndex = e.target.selectedIndex;
-            const option = e.target.options[selectedIndex];
-            const countryName = option.getAttribute('data-country-name');
-            setSelectedCountryPhone(value);
+    const handleSelectOption = (option) => {
+        setSelectedCountry(option);
+        setSearchQuery('');
+    };
+
+
+    // const checkForDuplicateValue = (name, value) => {
+    //     const existingValue = formData[name];
+    //     if (existingValue && existingValue.trim() === value.trim()) {
+    //         toast.warning('Duplicate value detected! Please use a different value.');
+    //         return true;
+    //     }
+    //     return false;
+    // };
+
+    const handleInputChange1 = (e) => {
+        let name, value;
+
+        if (e.target) {
+            ({ name, value } = e.target);
+        } else {
+            value = e;
+            name = 'phoneNumber';
+        }
+        if (name === "phoneNumber") {
+            setPhoneNumber(value);
+            console.log("Phone Number:", value); // Add this line to log the phone number to the console
         }
         setFormData({
             ...formData,
             [name]: value,
         });
-    };
-    const [selectedCountry, setSelectedCountry] = useState({ code: '+44', phone: '44' });
+        const formattedValue = value.replace(/\D+/g, '').slice(0, 11);
+        setFormData({ ...formData, phoneNumber: formattedValue });
 
-    const handleCountrySelect = (country) => {
-        setSelectedCountry(country);
-        setFormData({ ...formData, phoneNumber: `+${country.phone}` });
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        const filteredOptions = options.filter((option) => {
+            const countryName = option.querySelector('.country-name').innerText.toLowerCase();
+            return countryName.includes(e.target.value.toLowerCase());
+        });
+        setOptions(filteredOptions);
+    };
+    const [currentStep, setCurrentStep] = useState(1);
+    // const [formData, setFormData] = useState({
+    //     name: '',
+    //     email: '',
+    //     password: '',
+    //     phoneNumber: '',
+    //     yourPosition: '',
+    //     saleBefore: '',
+    //     wantFirst: '',
+    //     companyName: '',
+    //     noOfEmployess: '',
+    //     selectCompanyType: '',
+    //     employeeWillUse: '',
+    //     address: '',
+    //     postalCode: '',
+    //     country: '',
+    // });
+
+    let token = localStorage.getItem('token');
+    const [model, setModel] = useState({});
+    const [step, setStep] = useState(1);
+    const navigate = useNavigate()
+    const [name, setFullName] = useState('');
+    const [email, setEmailAdress] = useState('');
+    const [password, setPassword] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [saleBefore, setSaleBefore] = useState('');
+    const [companyName, setCompanyName] = useState('');
+    const [noOfEmployess, setNoOfEmployees] = useState('');
+    const [selectCompanyType, setSelectCompanyType] = useState('');
+    const [address, setFullAddress] = useState('');
+    const [postalCode, setPostalCode] = useState('');
+    const [country, setCountry] = useState('');
+    const [street_address, setStreetAddress] = useState('');
+    const [yourPosition, setYourPosition] = useState('');
+    const [city_Address, setCity] = useState('');
+    const [wantFirst, setWantFirst] = useState([]);
+
+    const [loading, setLoading] = useState(false)
+
+
+    const [phone, setPhone] = useState("");
+
+
+    // const [timezoneOffset, settimezoneOffset] = useState('');
+    // const [timezone, setSelectedTimezone] = useState(
+    //     Intl.DateTimeFormat().resolvedOptions().timeZone
+    // )
+    // Assuming you have state variables to store the selected timezone and timezone offset
+    const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    const [timezoneOffset, setTimezoneOffset] = useState(null);
+
+    const items = JSON.parse(localStorage.getItem('items'));
+
+    let headers = {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    // const handleStartDateChange = (timezone) => {
+    //     console.log(timezone);
+    //     setSelectedTimezone(timezone);
+    //     const newtime = timezone?.value;
+    //     setModel({ timezoneOffset: timezone?.offset })
+    //     setModel((prevUserInfo) => ({
+    //         ...prevUserInfo,
+    //         timezone: newtime,
+    //     }));
+    // };
+    // const handleStartDateChange = (timezone) => {
+    //     console.log("Selected Timezone:", timezone.value);
+    //     console.log("Timezone Offset:", timezone.offset);
+
+    //     const timezoneOffset = {
+    //       hours: Math.floor(timezone.offset),
+    //       minutes: (timezone.offset % 1) * 60
+    //     };
+
+    //     console.log("Timezone Offset Object:", timezoneOffset);
+
+    //     setSelectedTimezone(timezone);
+    //     setModel((prevUserInfo) => ({
+    //       ...prevUserInfo,
+    //       timezone: {
+    //         value: timezone.value,
+    //         abbrev: timezone.abbrev,
+    //         altName: timezone.altName,
+    //         label: timezone.label
+    //       },
+    //       timezoneOffset: timezoneOffset
+    //     }));
+    //   };
+
+
+    // Modify the handleStartDateChange function to update both state variables
+    const handleStartDateChange = (selectedTimezone) => {
+        console.log(selectedTimezone)
+        setTimezone(selectedTimezone.value); // Assuming the TimezoneSelect component provides the selected value
+        setTimezoneOffset(selectedTimezone.offset); // Assuming the TimezoneSelect component also provides the offset
+    };
+    // useEffect(() => {
+    //     setSelectedTimezone(items.timezone)
+    // }, [items])
+
+    const handleNext = () => {
+        setStep(step + 1);
+    };
+
+    const handlePrevious = () => {
+        setStep(step - 1);
+    };
 
     const validateStep = (step) => {
         let isValid = true;
@@ -323,13 +240,20 @@ const SignUpForm = () => {
         return isValid;
     };
 
+
     const nextStep = () => {
         if (validateStep(currentStep)) {
             if (currentStep < 3) {
                 setCurrentStep(currentStep + 1);
             }
         } else {
-            toast.warning('Please fill in all required fields.');
+            enqueueSnackbar('Please fill in all required fields.', {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right"
+                }
+            });
         }
     };
 
@@ -339,199 +263,143 @@ const SignUpForm = () => {
         }
     };
 
-    // const handleSubmit = async (event) => {
+
+    // const handleSubmit = async (event) => {  
     //     event.preventDefault();
-    //     console.log('Form Data:', formData); // Log form data for debugging
+
+    //     const registerData = {
+    //         name,
+    //         email,
+    //         password,
+    //         phoneNumber,
+    //         yourPosition,
+    //         saleBefore,
+    //         wantFirst,
+    //         companyName,
+    //         noOfEmployees,
+    //         selectCompanyType,
+    //         employeeWillUse,
+    //         address,
+    //         postalCode,
+    //         country,
+    //     };
 
     //     try {
-    //         const response = await fetch('https://infinitisuiteapi.vercel.app/api/v1/signup', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(formData),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (!response.ok) {
-    //             if (data.error && data.error.includes('duplicate key error')) {
-    //                 toast.error('This email is already registered. Please use a different email.');
-    //             } else {
-    //                 throw new Error('Network response was not ok');
-    //             }
-    //         } else {
-    //             console.log('Success:', data);
-    //             toast.success('Account created successfully!');
-
-    //             event.target.reset(); // Reset form fields
-    //             // Optionally, redirect to another page
-    //             // window.location.href = 'http://localhost:3001/gmail';
-    //         }
+    //         const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signup', registerData);
+    //         console.log('Registration successful!');
+    //         console.log(response.data);
     //     } catch (error) {
-    //         console.error('Error:', error);
-    //         toast.error('This email is already registered. Please use a different email.');
+    //         console.error('Error registering:', error);
     //     }
     // };
+    const [emailError, setEmailError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    useEffect(() => {
+        const concatenatedAddress = `${street_address}, ${city_Address}, ${postalCode}, ${country}`;
+        setFullAddress(concatenatedAddress);
+    }, [street_address, city_Address, postalCode, country]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Form Data:', formData); // Log form data for debugging
+        setIsSubmitted(true); // Disable the button when clicked
 
-        // Prepare data for each API endpoint
-        // Prepare data for each API endpoint using FormData
-        const formDataObject = new FormData();
-        formDataObject.append('orgname', formData.companyName);
-        formDataObject.append('postalcode', '676yz');
-        formDataObject.append('street', '2');
-        formDataObject.append('city', 'karachi');
-        formDataObject.append('email', formData.email);
-        formDataObject.append('password', formData.password);
-
-        const universalLanguageData = {
+        const registerData = {
             name: formData.name,
-            password: formData.password,
-            email: formData.email,
-            userType: "owner",
-            timezone: "5",
-            timezoneOffset: "Asia/Karachi",
-            company: formData.companyName
+            email,
+            password,
+            phoneNumber,
+            yourPosition,
+            saleBefore,
+            companyName,
+            noOfEmployess,
+            selectCompanyType,
+            address,
+            postalCode,
+            country,
+            timezone,
+            timezoneOffset,
+            street_address,
+            city_Address,
         };
 
-        const clickhrData = new FormData();
-        clickhrData.append('company', formData.companyName);
-        clickhrData.append('com_email', formData.email);
-        clickhrData.append('com_number', formData.phoneNumber);
-        clickhrData.append('num', formData.phoneNumber);
-        clickhrData.append('email', formData.email);
-        clickhrData.append('com_web', 'sstrack.io');
-        clickhrData.append('nemp', formData.noOfEmployees);
-        clickhrData.append('fname', formData.name);
-        clickhrData.append('lname', formData.name);
-        clickhrData.append('com_address', formData.address);
-        clickhrData.append('password', formData.password)
 
-
-        try {
-            const response = await fetch('https://infinitisuiteapi.vercel.app/api/v1/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (data.error && data.error.includes('duplicate key error')) {
-                    toast.error('This email is already registered. Please use a different email.');
-                } else {
-                    console.log(data, 'signup infiniti suite response was not ok');
+        if (!registerData.name || !registerData.email || !registerData.password || !registerData.phoneNumber || !registerData.yourPosition || !registerData.saleBefore || !registerData.companyName || !registerData.noOfEmployess || !registerData.selectCompanyType || !registerData.address || !registerData.postalCode || !registerData.country || !registerData.timezone || !registerData.timezoneOffset || !registerData.street_address || !registerData.city_Address) {
+            enqueueSnackbar("Please fill in all required fields.", {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right"
                 }
-            } else {
-                console.log('Success infiniti suite:', data);
-                // toast.success('Account created successfully!');
-                // event.target.reset(); // Reset form fields
-            }
-
-            // Send data to the first API
-            const response1 = await fetch('https://verdebooks-backend.vercel.app/api/addOrganization', {
-                method: 'POST',
-                body: formDataObject, // Send FormData directly
             });
-
-            const data1 = await response1.json();
-
-            if (!response1.ok) {
-                if (data1.error && data1.error.includes('duplicate key error')) {
-                    toast.error('verdebooks Organization data error: ' + data1.error);
-                } else {
-                    console.log(data1, 'verdebooks Organization response was not ok for addOrganization API');
-                }
-            } else {
-                console.log('Success (addOrganization) verdebooks:', data1);
-                // toast.success('Account created successfully!');
-
-            }
-
-            // Send data to the second API
-            const response2 = await fetch('https://ss-track-xi.vercel.app/api/v1/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(universalLanguageData),
-            });
-
-            const data2 = await response2.json();
-
-            if (!response2.ok) {
-                if (data2.error && data2.error.includes('duplicate key error')) {
-                    toast.error('User signup sstrack error: ' + data2.error);
-                } else {
-                    console.log(data2, 'User signup sstrack response was not ok for signup API');
-                }
-            } else {
-                console.log('Success sstrack (signup):', data2);
-                // toast.success('Account created successfully!');
-                // event.target.reset(); // Reset form fields
-                // Optionally, redirect to another page
-                // window.location.href = 'http://localhost:3001/gmail';
-            }
-            // Send data to the second API
-            const response3 = await fetch('https://click-hr.vercel.app/addorg', {
-                method: 'POST',
-                body: clickhrData // Convert the data to JSON string
-            });
-
-            const data3 = await response3.json();
-
-            if (!response3.ok) {
-                event.target.reset(); // Reset form fields
-
-                if (data3.error && data3.error.includes('duplicate key error')) {
-                    toast.error('User signup clickhr error: ' + data3.error);
-                } else {
-                    console.log(data3, 'User signup clickhr response was not ok for signup API');
-                }
-            } else {
-                console.log('Success clickhr (signup):', data3);
-                // toast.success('Account created successfully!');
-                event.target.reset(); // Reset form fields
-                // Optionally, redirect to another page
-                // window.location.href = 'http://localhost:3001/gmail';
-            }
-            if (response.ok && response1.ok && response2.ok && response3.ok) {
-                toast.success('Account created successfully!');
-            }
-            else {
-                toast.error('An error occurred. Please try again.');
-
-            }
-
-        } catch (error) {
-            event.target.reset(); // Reset form fields
-
-            console.error('Error:', error);
-            toast.error('An error occurred. Please try again.');
+            setIsSubmitted(false); // Re-enable the button
+            return;
         }
 
-    };
 
-    const { country, setRegion } = useState([]);
+        if (!registerData.email.includes("@") || !registerData.email.includes(".")) {
+            enqueueSnackbar("Invalid email please enter valid email", {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right"
+                }
+            });
+            setIsSubmitted(false); // Re-enable the button
+            return;
+        }
+
+        console.log('Register Data:', registerData);
+
+        try {
+            const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signup', registerData);
+            console.log('Registration successful!');
+            console.log(response.data);
+
+            if (response.status === 201 && response.data.Message) {
+                enqueueSnackbar("Account created successfully!", {
+                    variant: "success",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right"
+                    }
+                });
+                setLoading(false);
+                setIsSubmitted(false); // Re-enable the button
+                navigate('/login', { replace: true }); // Redirect to login page immediately
+            } else {
+                enqueueSnackbar('Error registering. Please try again.', {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right"
+                    }
+                });
+                setIsSubmitted(false); // Re-enable the button
+            }
+        } catch (error) {
+            console.error('Error registering:', error);
+            enqueueSnackbar('Error registering. Please try again.', {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right"
+                }
+            });
+            setIsSubmitted(false); // Re-enable the button
+        }
+    };
+    // console.log('Handle Submit ....', handleSubmit())no
 
     return (
-
-
         <>
             <Header />
-            <ToastContainer /> {/* Add this line to display toasts */}
+            <SnackbarProvider />
             <section className="ud-page-banner">
-                <div className="container">
+                <div className="container" id='#signup'>
                     <div className="row">
                         <div className="col-lg-12">
-                            <div className="ud-banner-content">
+                            <div className="ud-banner-content"
+                            >
                                 <span style={{ color: '#ddd' }}>Infiniti Suite</span>
                                 <h1>Create Account</h1>
                                 <p style={{ color: '#ddd' }}>
@@ -545,7 +413,7 @@ const SignUpForm = () => {
             <section id="contact" className="ud-contact">
                 <div className="container">
                     <div className="signpwrapper" style={{ width: '40%', display: 'block', margin: '0 auto' }}>
-                        <div className="ud-contact-content-wrapper wow fadeInUp" data-wow-delay=".2s">
+                        <div className="ud-contact-content-wrapper">
                             <div className="step-indicator">
                                 <div className={`step ${currentStep >= 1 ? 'active' : ''}`}></div>
                                 <div className={`step ${currentStep >= 2 ? 'active' : ''}`}></div>
@@ -558,260 +426,703 @@ const SignUpForm = () => {
                                 <li id="confirm"><strong>Finish</strong></li>
                             </ul>
                             <br /><br /><br />
-                            <div class="ud-banner-content">
+                            <div className="ud-banner-content">
                                 <h1 style={{ color: "#3056d3" }}>Let's Get Started</h1>
                                 <p style={{ color: "#050505" }}>First You'll need to create the Account.</p>
                             </div>
-                            <form id="signup-form" onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} >
+
                                 {currentStep === 1 && (
                                     <div className="form-container active" id="step-1">
-                                        <div className="form-group">
-                                            <label htmlFor="name">Your Name:</label>
-                                            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="email">Your Work Email:</label>
-                                            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="password">Set a Password:</label>
-                                            <input type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} required />
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <div className="select-box">
-                                                <label for="tel">Phone Number:</label>
-                                                <div className="selected-option">
-                                                    <select id="country" name="phoneNumber" value={formData.country.phone} onChange={handleInputChange} required style={{ width: '20%' }}>
-                                                        {countries.map(country => (
-                                                            <option key={country.code} value={country.phone} data-country-name={country.name}>
-                                                                {country.name} (+{country.phone})
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <input type="phone" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} required style={{ width: '80%' }} />
-                                                </div>
+                                        <div>
+                                            <div className="form-group">
+                                                <label>Full Name*</label>
+                                                <input type="text" name='name' value={formData.name} onChange={handleInputChange} required />
                                             </div>
-                                        </div> */}
-                                        {/* <div className="form-group">
-                                            <div className="select-box">
-                                                <label for="tel">Phone Number:</label>
-                                                <div className="selected-option">
-                                                    <select id="country" name="phoneNumber" value={formData.country.phone} onChange={handleInputChange} required style={{ width: '50%' }}>
-                                                        {countries.map(country => (
-                                                            <option key={country.code} value={country.phone}>
-                                                                (+{country.phone})
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <input type="phone" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} required style={{ width: '80%' }} />
-                                                </div>
+                                            <div className="form-group">
+                                                <label>Email Address*</label>
+                                                <input type="email" name='email' value={email} onChange={(e) => setEmailAdress(e.target.value)} style={{ borderColor: emailError ? 'red' : '' }}
+                                                    required />
+                                                {/* {emailError && <div style={{ color: 'red' }}>{errorMes  sage}</div>} */}
                                             </div>
-                                        </div> */}
-                                        {/* <div className="form-group">
-                                            <div className="select-box">
-                                                <label for="tel">Phone Number:</label>
-                                                <div className="selected-option">
-                                                    <select id="country" name="phoneNumber" value={formData.country.phone} onChange={handleInputChange} required style={{ width: '15%' }}>
-                                                        {countries.map(country => (
-                                                            <option key={country.code} value={country.phone} data-name={country.name}>
-                                                                (+{country.phone})
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <input type="phone" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} required style={{ width: '85%' }} />
-                                                </div>
+                                            <div className="form-group">
+                                                <label>Password*</label>
+                                                <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
                                             </div>
-                                        </div> */}
-                                        {/* <div class="form-group">
-                                            <div class="select-box">
-                                                <label for="tel">Phone Number:</label>
-                                                <div class="selected-option">
-                                                    <div class="ahad-custom-mobile">
-                                                <span class="iconify" data-icon="flag:gb-4x3"></span>
-                                                        <strong>+44</strong>
+                                            {/* <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /> */}
+
+                                            <div className="form-group">
+                                                <label htmlFor="text">Phone Number*</label>
+
+                                                {/* <PhoneInput
+                                                        country={"pk"}
+                                                        enableSearch={true}
+                                                        id='phoneNumber'
+                                                        name='phoneNumber'
+                                                        value={formData.phoneNumber}
+                                                        onChange={(value) => {
+                                                            const formattedValue = value.replace(/\D+/g, '');
+                                                            if (formattedValue.length === 11) {
+                                                                const phoneNumber = `0${formattedValue.slice(0, 2)}${formattedValue.slice(2)}`;
+                                                                handleInputChange1(phoneNumber);
+                                                            } else {
+                                                                handleInputChange1(formattedValue);
+                                                            }
+                                                        }}
+                                                        containerStyle={{ flex: 1, marginRight: '-50px' }}
+                                                        inputStyle={{ fontSize: '16px', padding: '10px 50px', width: '91%', marginRight: '-50px' }}
+                                                        hideCountryCode={true}
+                                                        disableCountryCode={true}
+                                                        placeholder=""
+                                                        maxLength={11}
+                                                    /> */}
+                                                <PhoneInput
+                                                    // country={"eg"}
+                                                    // enableSearch={true}
+                                                    name='phoneNumber'
+                                                    value={formData.phoneNumber}
+                                                    onChange={handleInputChange1}
+                                                    containerStyle={{ flex: 1, marginRight: '-50px' }}
+                                                    inputStyle={{ fontSize: '16px', padding: '9px 50px', width: '100%', marginRight: '-50px' }}
+                                                    placeholder="" // Add this prop to remove the placeholder
+                                                />
+                                                {/* <input
+                                                        type="text"
+                                                        name='phoneNumber'
+                                                        value={formData.phoneNumber}
+                                                        onChange={handleInputChange1}
+                                                        style={{ fontSize: '16px', padding: '10px', width: '230%', marginLeft: 20 }}
+                                                    /> */}
+                                                {/* <div className="form-group">
+                                                    <label htmlFor="text">Phone Number:</label>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <PhoneInput
+                                                            country={"eg"}
+                                                            enableSearch={true}
+                                                            name='phoneNumber'
+                                                            value={phoneNumber}
+                                                            onChange={(value) => {
+                                                                handleInputChange1(value);
+                                                                console.log("Phone Number:", value); // Add this line to log the phone number to the console
+                                                            }}
+                                                            containerStyle={{ flex: 1 }}
+                                                            inputStyle={{ fontSize: '16px', padding: '10px', width: '230%' }}
+                                                            hideCountryCode={true} // Add this prop to hide the flag
+                                                            disableCountryCode={true} // Add this prop to disable the country code dropdown
+                                                        />
                                                     </div>
-                                                    <input type="tel" name="tel" placeholder="Phone Number" />
-                                                </div>
-                                                <div class="options">
-                                                    <input type="text" class="search-box" placeholder="Search Country Name" />
-                                                        <ol>
-                                                        </ol>
-                                                </div>
+                                                </div> */}
+                                                {/* <input
+                                                        type="tel"
+                                                        name="phoneNumber"
+                                                        placeholder="Phone Number"
+                                                        value={formData.phoneNumber}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                    /> */}
                                             </div>
-                                        </div> */}
-                                        <div className="form-group">
-                                            <label htmlFor="password">Set a Password:</label>
-                                            <input type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} required />
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <label htmlFor="tel">Phone Number:</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <PhoneInput
-                                                    country={"eg"}
-                                                    enableSearch={true}
-                                                    value={phone}
-                                                    onChange={(phone) => setPhone(phone)}
-                                                    containerStyle={{ flex: 2 }}
-                                                    inputStyle={{ padding: '10px', fontSize: '16px', width: '100%' }}
-                                                />
 
+                                            <div className="nav-buttons">
+                                                <button type="button" className="next-btn" onClick={nextStep}>Next</button>
                                             </div>
-                                        </div> */}
-                                        <div className="form-group">
-                                            <label htmlFor="tel">Phone Number:</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <PhoneInput
-                                                    country={"eg"}
-                                                    enableSearch={true}
-                                                    value={phone}
-                                                    onChange={(phone) => setPhone(phone)}
-                                                    containerStyle={{ flex: 1 }}
-                                                    inputStyle={{ fontSize: '16px', padding: '10px', width: '230%' }}
-                                                />
-
-                                                <input
-                                                    type="tel"
-                                                    value={phone}
-                                                    onChange={(e) => setPhone(e.target.value)}
-                                                    style={{ fontSize: '16px', padding: '10px', width: '230%', marginLeft: 20 }}
-                                                />
-
-                                            </div>
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <label htmlFor="tel">Phone Number:</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <PhoneInput
-                                                    country={"eg"}
-                                                    enableSearch={true}
-                                                    value={phone}
-                                                    onChange={(phone) => setPhone(phone)}
-                                                    containerStyle={{ flex: 0 }}
-                                                    inputStyle={{ fontSize: '16px', width: '90%' }}
-                                                />
-
-                                                <input
-                                                    type="tel"
-                                                    value={phone}
-                                                    onChange={(e) => setPhone(e.target.value)}
-                                                    style={{ padding: '10px', fontSize: '16px', width: '100%' }}
-                                                />
-                                            </div>
-                                        </div> */}
-                                        {/* <div className="form-group">
-                                            <label htmlFor="tel">Phone Number:</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <PhoneInput
-                                                    country={"eg"}
-                                                    enableSearch={true}
-                                                    value={phone}
-                                                    onChange={(phone) => setPhone(phone)}
-                                                    containerStyle={{ flex: 1 }}
-                                                    inputStyle={{ padding: '10px', fontSize: '16px', width: '100%' }}
-                                                />
-                                                <div style={{ marginLeft: 10, flex: 1 }}>
-                                                    <img
-                                                        src={`https://flagcdn.com/16x12/${phone?.countryCode?.toLowerCase()}.png`}
-                                                        alt={phone?.countryCode}
-                                                        style={{ width: 20, height: 15 }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div> */}
-                                        {/* <div className="form-group">
-                                            <label htmlFor="tel">Phone Number:</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <PhoneInput
-                                                    country={"eg"}
-                                                    enableSearch={true}
-                                                    value={phone}
-                                                    onChange={(phone) => setPhone(phone)}
-                                                    containerStyle={{ flex: 1 }}
-                                                    inputStyle={{ padding: '10px', fontSize: '16px', width: '100%' }}
-                                                    flags={{ EG: '🇪🇬' }}
-                                                />
-
-                                            </div>
-                                        </div> */}
-                                        <div className="nav-buttons">
-                                            <button type="button" className="next-btn" onClick={nextStep}>Next</button>
                                         </div>
                                     </div>
                                 )}
-
                                 {currentStep === 2 && (
                                     <div className="form-container active" id="step-2">
-                                        <div className="form-group">
-                                            <label htmlFor="yourPosition">Your Position:</label>
-                                            <input type="text" id="yourPosition" name="yourPosition" value={formData.yourPosition} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="saleBefore">Have you used any sales tool before:</label>
-                                            <input type="text" id="saleBefore" name="saleBefore" value={formData.saleBefore} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="wantFirst">What do you want to do first:</label>
-                                            <select id="wantFirst" name="wantFirst" value={formData.wantFirst} onChange={handleInputChange} required>
-                                                <option value="Close deals faster">Close deals faster</option>
-                                                <option value="Find new leads">Find new leads</option>
-                                                <option value="Manage relationships better">Manage relationships better</option>
-                                                <option value="Set goals and track progress">Set goals and track progress</option>
-                                                <option value="Set up a team and permissions">Set up a team and permissions</option>
-                                            </select>
-                                        </div>
-                                        <div className="nav-buttons">
-                                            <button type="button" className="prev-btn" onClick={prevStep}>Previous</button>
-                                            <button type="button" className="next-btn" onClick={nextStep}>Next</button>
+
+                                        <div>
+                                            {/* <div className="form-group">
+                                                                            <label>Number of Employees:</label>
+                                                                            <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
+                                                                                <option value="10-50">10-50</option>
+                                                                                <option value="50-100">50-100</option>
+                                                                                <option value="100-200">100-200</option>
+                                                                            </select>
+                                                                        </div> */}
+
+                                            {/* <div className="form-group">
+                                                                            <label>Select Company Type:</label>
+                                                                            <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
+                                                                                <option value="technology-startup">Technology Startup</option>
+                                                                                <option value="ecommerce-business">E-commerce Business</option>
+                                                                                <option value="manufacturing-company">Manufacturing Company</option>
+                                                                                <option value="consulting-firm">Consulting Firm</option>
+                                                                                <option value="healthcare-services">Healthcare Services</option>
+                                                                                <option value="financial-services">Financial Services</option>
+                                                                            </select>
+                                                                        </div>           
+                                                                        <div className="form-group">
+                                                                            <label>Number of Employees who will use Infiniti Suite:</label>
+                                                                            <select value={employeeWillUse} onChange={(e) => setEmployeeWillUse(e.target.value)}>
+                                                                                <option value="1-5">1-5</option>
+                                                                                <option value="6-10">6-10</option>
+                                                                                <option value="11-20">11-20</option>
+                                                                                <option value="21-50">21-50</option>
+                                                                                <option value="51-100">51-100</option>
+                                                                                <option value="100+">100+</option>
+                                                                            </select>
+                                                                        </div> */}
+                                            {/* <div className="form-group">
+                                                <label>Country:</label>
+                                                <input type="text" name='country' value={country} onChange={(e) => setCountry(e.target.value)} />
+                                            </div> */}
+                                            <div className="form-group">
+                                                <label>Country*</label>
+                                                <div className="dropdown" style={{
+                                                    zIndex: '3',
+                                                    backgroundColor: '#f9f9f9',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    padding: '0px',
+                                                    width: '100%',
+                                                    position: 'relative'
+                                                }}>
+
+                                                    <select
+                                                        placeholder='Select...'
+                                                        name='country'
+                                                        value={country || ''}
+                                                        onChange={(e) => setCountry(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '42px',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            border: 'none',
+                                                            borderRadius: '5px',
+                                                            appearance: 'none',
+                                                            WebkitAppearance: 'none',
+                                                            MozAppearance: 'none',
+                                                        }}
+                                                    >
+                                                        <option value="" disabled hidden>{country ? '' : 'Select...'}</option>
+                                                        <option value="Afghanistan">Afghanistan</option>
+                                                        <option value="Albania">Albania</option>
+                                                        <option value="Algeria">Algeria</option>
+                                                        <option value="Andorra">Andorra</option>
+                                                        <option value="Angola">Angola</option>
+                                                        <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                                                        <option value="Argentina">Argentina</option>
+                                                        <option value="Armenia">Armenia</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="Austria">Austria</option>
+                                                        <option value="Azerbaijan">Azerbaijan</option>
+                                                        <option value="Bahamas">Bahamas</option>
+                                                        <option value="Bahrain">Bahrain</option>
+                                                        <option value="Bangladesh">Bangladesh</option>
+                                                        <option value="Barbados">Barbados</option>
+                                                        <option value="Belarus">Belarus</option>
+                                                        <option value="Belgium">Belgium</option>
+                                                        <option value="Belize">Belize</option>
+                                                        <option value="Benin">Benin</option>
+                                                        <option value="Bhutan">Bhutan</option>
+                                                        <option value="Bolivia">Bolivia</option>
+                                                        <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                                                        <option value="Botswana">Botswana</option>
+                                                        <option value="Brazil">Brazil</option>
+                                                        <option value="Brunei">Brunei</option>
+                                                        <option value="Bulgaria">Bulgaria</option>
+                                                        <option value="Burkina Faso">Burkina Faso</option>
+                                                        <option value="Burundi">Burundi</option>
+                                                        <option value="Cambodia">Cambodia</option>
+                                                        <option value="Cameroon">Cameroon</option>
+                                                        <option value="Canada">Canada</option>
+                                                        <option value="Central African Republic">Central African Republic</option>
+                                                        <option value="Chad">Chad</option>
+                                                        <option value="Chile">Chile</option>
+                                                        <option value="China">China</option>
+                                                        <option value="Colombia">Colombia</option>
+                                                        <option value="Comoros">Comoros</option>
+                                                        <option value="Congo">Congo</option>
+                                                        <option value="Costa Rica">Costa Rica</option>
+                                                        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                                        <option value="Croatia">Croatia</option>
+                                                        <option value="Cuba">Cuba</option>
+                                                        <option value="Cyprus">Cyprus</option>
+                                                        <option value="Czech Republic">Czech Republic</option>
+                                                        <option value="Denmark">Denmark</option>
+                                                        <option value="Djibouti">Djibouti</option>
+                                                        <option value="Dominica">Dominica</option>
+                                                        <option value="Dominican Republic">Dominican Republic</option>
+                                                        <option value="Ecuador">Ecuador</option>
+                                                        <option value="Egypt">Egypt</option>
+                                                        <option value="El Salvador">El Salvador</option>
+                                                        <option value="Equatorial Guinea">Equatorial Guinea</option>
+                                                        <option value="Eritrea">Eritrea</option>
+                                                        <option value="Estonia">Estonia</option>
+                                                        <option value="Ethiopia">Ethiopia</option>
+                                                        <option value="Fiji">Fiji</option>
+                                                        <option value="Finland">Finland</option>
+                                                        <option value="Gabon">Gabon</option>
+                                                        <option value="Gambia">Gambia</option>
+                                                        <option value="Georgia">Georgia</option>
+                                                        <option value="Germany">Germany</option>
+                                                        <option value="Ghana">Ghana</option>
+                                                        <option value="Greece">Greece</option>
+                                                        <option value="Grenada">Grenada</option>
+                                                        <option value="Guatemala">Guatemala</option>
+                                                        <option value="Guinea">Guinea</option>
+                                                        <option value="Guinea-Bissau">Guinea-Bissau</option>
+                                                        <option value="Guyana">Guyana</option>
+                                                        <option value="Haiti">Haiti</option>
+                                                        <option value="Honduras">Honduras</option>
+                                                        <option value="Hungary">Hungary</option>
+                                                        <option value="Iceland">Iceland</option>
+                                                        <option value="India">India</option>
+                                                        <option value="Indonesia">Indonesia</option>
+                                                        <option value="Iran">Iran</option>
+                                                        <option value="Iraq">Iraq</option>
+                                                        <option value="Ireland">Ireland</option>
+                                                        <option value="Israel">Israel</option>
+                                                        <option value="Italy">Italy</option>
+                                                        <option value="Jamaica">Jamaica</option>
+                                                        <option value="Japan">Japan</option>
+                                                        <option value="Jordan">Jordan</option>
+                                                        <option value="Kazakhstan">Kazakhstan</option>
+                                                        <option value="Kenya">Kenya</option>
+                                                        <option value="Kiribati">Kiribati</option>
+                                                        <option value="North Korea">North Korea</option>
+                                                        <option value="South Korea">South Korea</option>
+                                                        <option value="Kosovo">Kosovo</option>
+                                                        <option value="Kuwait">Kuwait</option>
+                                                        <option value="Kyrgyzstan">Kyrgyzstan</option>
+                                                        <option value="Laos">Laos</option>
+                                                        <option value="Latvia">Latvia</option>
+                                                        <option value="Lebanon">Lebanon</option>
+                                                        <option value="Lesotho">Lesotho</option>
+                                                        <option value="Liberia">Liberia</option>
+                                                        <option value="Libya">Libya</option>
+                                                        <option value="Lithuania">Lithuania</option>
+                                                        <option value="Luxembourg">Luxembourg</option>
+                                                        <option value="Macedonia">Macedonia</option>
+                                                        <option value="Madagascar">Madagascar</option>
+                                                        <option value="Malawi">Malawi</option>
+                                                        <option value="Malaysia">Malaysia</option>
+                                                        <option value="Maldives">Maldives</option>
+                                                        <option value="Mali">Mali</option>
+                                                        <option value="Malta">Malta</option>
+                                                        <option value="Marshall Islands">Marshall Islands</option>
+                                                        <option value="Mauritania">Mauritania</option>
+                                                        <option value="Mauritius">Mauritius</option>
+                                                        <option value="Mexico">Mexico</option>
+                                                        <option value="Micronesia">Micronesia</option>
+                                                        <option value="Moldova">Moldova</option>
+                                                        <option value="Monaco">Monaco</option>
+                                                        <option value="Mongolia">Mongolia</option>
+                                                        <option value="Montenegro">Montenegro</option>
+                                                        <option value="Morocco">Morocco</option>
+                                                        <option value="Mozambique">Mozambique</option>
+                                                        <option value="Myanmar">Myanmar</option>
+                                                        <option value="Namibia">Namibia</option>
+                                                        <option value="Nauru">Nauru</option>
+                                                        <option value="Nepal">Nepal</option>
+                                                        <option value="Netherlands">Netherlands</option>
+                                                        <option value="New Zealand">New Zealand</option>
+                                                        <option value="Nicaragua">Nicaragua</option>
+                                                        <option value="Niger">Niger</option>
+                                                        <option value="Nigeria">Nigeria</option>
+                                                        <option value="Norway">Norway</option>
+                                                        <option value="Oman">Oman</option>
+                                                        <option value="Pakistan">Pakistan</option>
+                                                        <option value="Palau">Palau</option>
+                                                        <option value="Panama">Panama</option>
+                                                        <option value="Papua New Guinea">Papua New Guinea</option>
+                                                        <option value="Paraguay">Paraguay</option>
+                                                        <option value="Peru">Peru</option>
+                                                        <option value="Philippines">Philippines</option>
+                                                        <option value="Poland">Poland</option>
+                                                        <option value="Portugal">Portugal</option>
+                                                        <option value="Qatar">Qatar</option>
+                                                        <option value="Romania">Romania</option>
+                                                        <option value="Russia">Russia</option>
+                                                        <option value="Rwanda">Rwanda</option>
+                                                        <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                                                        <option value="Saint Lucia">Saint Lucia</option>
+                                                        <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                                                        <option value="Samoa">Samoa</option>
+                                                        <option value="San Marino">San Marino</option>
+                                                        <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                                                        <option value="Saudi Arabia">Saudi Arabia</option>
+                                                        <option value="Senegal">Senegal</option>
+                                                        <option value="Serbia">Serbia</option>
+                                                        <option value="Seychelles">Seychelles</option>
+                                                        <option value="Sierra Leone">Sierra Leone</option>
+                                                        <option value="Singapore">Singapore</option>
+                                                        <option value="Sint Maarten">Sint Maarten</option>
+                                                        <option value="Slovakia">Slovakia</option>
+                                                        <option value="Slovenia">Slovenia</option>
+                                                        <option value="Solomon Islands">Solomon Islands</option>
+                                                        <option value="Somalia">Somalia</option>
+                                                        <option value="South Africa">South Africa</option>
+                                                        <option value="South Sudan">South Sudan</option>
+                                                        <option value="Spain">Spain</option>
+                                                        <option value="Sri Lanka">Sri Lanka</option>
+                                                        <option value="Sudan">Sudan</option>
+                                                        <option value="Suriname">Suriname</option>
+                                                        <option value="Swaziland">Swaziland</option>
+                                                        <option value="Sweden">Sweden</option>
+                                                        <option value="Switzerland">Switzerland</option>
+                                                        <option value="Syria">Syria</option>
+                                                        <option value="Tajikistan">Tajikistan</option>
+                                                        <option value="Tanzania">Tanzania</option>
+                                                        <option value="Thailand">Thailand</option>
+                                                        <option value="Timor-Leste">Timor-Leste</option>
+                                                        <option value="Togo">Togo</option>
+                                                        <option value="Tonga">Tonga</option>
+                                                        <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                                                        <option value="Tunisia">Tunisia</option>
+                                                        <option value="Turkey">Turkey</option>
+                                                        <option value="Turkmenistan">Turkmenistan</option>
+                                                        <option value="Tuvalu">Tuvalu</option>
+                                                        <option value="Uganda">Uganda</option>
+                                                        <option value="Ukraine">Ukraine</option>
+                                                        <option value="United Arab Emirates">United Arab Emirates</option>
+                                                        <option value="United Kingdom">United Kingdom</option>
+                                                        <option value="United States">United States</option>
+                                                        <option value="Uruguay">Uruguay</option>
+                                                        <option value="Uzbekistan">Uzbekistan</option>
+                                                        <option value="Vanuatu">Vanuatu</option>
+                                                        <option value="Vatican City">Vatican City</option>
+                                                        <option value="Venezuela">Venezuela</option>
+                                                        <option value="Vietnam">Vietnam</option>
+                                                        <option value="Yemen">Yemen</option>
+                                                        <option value="Zambia">Zambia</option>
+                                                        <option value="Zimbabwe">Zimbabwe</option>
+                                                    </select>
+                                                    <span className="custom-arrow" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: '10px',
+                                                        transform: 'translateY(-55%)',
+                                                        fontSize: 'px',
+                                                        color: '#ccc',
+                                                        backgroundColor: 'transparent',/* add this line to remove fill color */
+                                                        textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                    }}>
+                                                        | {`▼`}
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>City*</label>
+                                                <input type="text" name='city_Address' value={city_Address} onChange={(e) => setCity(e.target.value)} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Street Address*</label>
+                                                <input type="text" name='street_address' value={street_address} onChange={(e) => setStreetAddress(e.target.value)} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Postal Code</label>
+                                                <input type="text" name='postalCode' value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>What do you want to do first</label>
+                                                <div className="dropdown" style={{
+                                                    zIndex: '3',
+                                                    backgroundColor: '#f9f9f9',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    // padding: '0px',
+                                                    width: '100%',
+                                                    position: 'relative'
+                                                }}>
+                                                    <select
+                                                        placeholder='Select...'
+                                                        name='selectCompanyType'
+                                                        value={wantFirst || ''}
+                                                        onChange={(e) => setWantFirst(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            // height: '42px',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            border: 'none',
+                                                            borderRadius: '5px',
+                                                            // backgroundColor: '#f9f9f9',
+                                                            appearance: 'none',
+                                                            WebkitAppearance: 'none',
+                                                            MozAppearance: 'none',
+
+                                                        }}
+                                                    >
+                                                        <option value="" disabled hidden>{selectCompanyType ? '' : 'Select...'}</option>
+                                                        {/* <option value="technology-startup">Technology Startup</option>
+                                                        <option value="ecommerce-business">E-commerce Business</option>
+                                                        <option value="manufacturing-company">Manufacturing Company</option>
+                                                        <option value="consulting-firm">Consulting Firm</option>
+                                                        <option value="healthcare-services">Healthcare Services</option>
+                                                        <option value="financial-services">Financial Services</option>
+                                                        <option value="" disabled hidden>{wantFirst ? '' : 'Select...'}</option> */}
+                                                        <option value="Close deals faster">Close deals faster</option>
+                                                        <option value="Find new leads">Find new leads</option>
+                                                        <option value="Manage relationships better">Manage relationships better</option>
+                                                        <option value="Set goals and track progress">Set goals and track progress</option>
+                                                        <option value="Set up a team and permissions">Set up a team and permissions</option>
+                                                    </select>
+                                                    <span className="custom-arrow" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: '10px',
+                                                        transform: 'translateY(-55%)',
+                                                        fontSize: 'px',
+                                                        color: '#ccc',
+                                                        backgroundColor: 'transparent',/* add this line to remove fill color */
+                                                        textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                    }}>
+                                                        | {`▼`}
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label className="countryLabel">Time Zone*</label>
+                                                <div className="dropdown" style={{ zIndex: '3' }}>
+                                                    <TimezoneSelect value={timezone ? timezone : items.timezone} onChange={handleStartDateChange} styles={{
+                                                        indicatorSeparator: () => ({ display: 'none' }),
+                                                        indicator: () => ({ display: 'none' }),
+                                                        width: '100%',
+                                                        // height: '42px',
+                                                        // padding: '10px',
+                                                        fontSize: '6px',
+                                                        border: 'none',
+                                                        borderRadius: '5px',
+                                                        // backgroundColor: '#f9f9f9',
+                                                        appearance: 'none',
+                                                        WebkitAppearance: 'none',
+                                                        MozAppearance: 'none',
+                                                        control: (base) => ({
+                                                            ...base,
+                                                            // height: '5px', // increase the height to 50px
+                                                            width: '100%',
+                                                            padding: '3px',
+                                                            fontSize: '16px',
+                                                            // border: 'none',
+                                                            borderRadius: '5px',
+                                                            // appearance: 'none',
+                                                            // WebkitAppearance: 'none',
+                                                            // MozAppearance: 'none',
+                                                            textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                        }),
+                                                    }}
+                                                        components={{
+                                                            DropdownIndicator: () => null,
+                                                            IndicatorSeparator: () => null,
+                                                        }}
+                                                    />
+                                                    {/* <Timezone /> */}
+                                                    {/* <button className="btn btn-secondary dropdown-toggle  countryDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                (UTC+05:00) Islamabad, Karachi
+                                            </button> */}
+                                                    <span className="custom-arrow" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: '10px',
+                                                        transform: 'translateY(-55%)',
+                                                        fontSize: '17px',
+                                                        color: '#ccc',
+                                                        backgroundColor: 'transparent',/* add this line to remove fill color */
+                                                        textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                    }}>
+                                                        | {`▼`}
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {/* </div>
+                                          {/* <button type="button" onClick={handlePrevious}>
+                                                                            Previous
+                                                                        </button> */}
+                                            <div className="nav-buttons">
+                                                <button type="button" onClick={prevStep}>
+                                                    Previous
+                                                </button>
+                                                <button type="button" className="next-btn" onClick={nextStep}>Next</button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                                 {currentStep === 3 && (
                                     <div className="form-container active" id="step-3">
-                                        <div className="form-group">
-                                            <label htmlFor="companyName">Company Name:</label>
-                                            <input type="text" id="companyName" name="companyName" value={formData.companyName} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="noOfEmployees">Number of Employees:</label>
-                                            <select id="noOfEmployees" name="noOfEmployees" value={formData.noOfEmployees} onChange={handleInputChange} required>
-                                                <option value="10-50">10-50</option>
-                                                <option value="50-100">50-100</option>
-                                                <option value="100-200">100-200</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="selectCompanyType">Select Company Type:</label>
-                                            <select id="selectCompanyType" name="selectCompanyType" value={formData.selectCompanyType} onChange={handleInputChange} required>
-                                                <option value="technology-startup">Technology Startup</option>
-                                                <option value="ecommerce-business">E-commerce Business</option>
-                                                <option value="manufacturing-company">Manufacturing Company</option>
-                                                <option value="consulting-firm">Consulting Firm</option>
-                                                <option value="healthcare-services">Healthcare Services</option>
-                                                <option value="financial-services">Financial Services</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="employeeWillUse">Number of Employees who will use Infiniti Suite:</label>
-                                            <select id="employeeWillUse" name="employeeWillUse" value={formData.employeeWillUse} onChange={handleInputChange} required>
-                                                <option value="1-10">1-10</option>
-                                                <option value="10-50">10-50</option>
-                                                <option value="50-100">50-100</option>
-                                            </select>
-                                        </div>
-                                        <div className="nav-buttons">
-                                            <button type="button" className="prev-btn" onClick={prevStep}>Previous</button>
-                                            {/* <Link to='/login'> */}
-                                            <button type="submit" className="submit-btn">Submit</button>
-                                            {/* </Link> */}
+                                        <div>
+                                            <div className="form-group">
+                                                <label>Company Name*</label>
+                                                <input type="text" name='companyName' value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                                            </div>
+                                            {/* <button type="button" onClick={handleNext}>
+                                        Next
+                                    </button> */}
+                                            {/* <div className="form-group"> */}
+                                            {/* <label>Select Company Type:</label>
+                                                <div className="dropdown" style={{ zIndex: '3' }}>
+                                                    <select placeholder='Select...' name='selectCompanyType' value={selectCompanyType || ''} onChange={(e) => setSelectCompanyType(e.target.value)}> */}
+                                            {/* <option disabled hidden>Select...</option> */}
+                                            {/* <option>Select...</option> */}
+                                            {/* <option value="" disabled hidden>{selectCompanyType ? '' : 'Select...'}</option>
+                                                        <option value="technology-startup">Technology Startup</option>
+                                                        <option value="ecommerce-business">E-commerce Business</option>
+                                                        <option value="manufacturing-company">Manufacturing Company</option>
+                                                        <option value="consulting-firm">Consulting Firm</option>
+                                                        <option value="healthcare-services">Healthcare Services</option>
+                                                        <option value="financial-services">Financial Services</option>
+                                                    </select> */}
+                                            {/* </div>
+                                            </div> */}
+                                            <div className="form-group">
+                                                <label>Select Company Type*</label>
+                                                <div className="dropdown" style={{
+                                                    zIndex: '3',
+                                                    backgroundColor: '#f9f9f9',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    padding: '0px',
+                                                    width: '100%',
+                                                    position: 'relative'
+                                                }}>
+                                                    <select
+                                                        placeholder='Select...'
+                                                        name='selectCompanyType'
+                                                        value={selectCompanyType || ''}
+                                                        onChange={(e) => setSelectCompanyType(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '42px',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            border: 'none',
+                                                            borderRadius: '5px',
+                                                            // backgroundColor: '#f9f9f9',
+                                                            appearance: 'none',
+                                                            WebkitAppearance: 'none',
+                                                            MozAppearance: 'none',
+
+                                                        }}
+                                                    >
+                                                        <option value="" disabled hidden>{selectCompanyType ? '' : 'Select...'}</option>
+                                                        <option value="technology-startup">Technology Startup</option>
+                                                        <option value="ecommerce-business">E-commerce Business</option>
+                                                        <option value="manufacturing-company">Manufacturing Company</option>
+                                                        <option value="consulting-firm">Consulting Firm</option>
+                                                        <option value="healthcare-services">Healthcare Services</option>
+                                                        <option value="financial-services">Financial Services</option>
+                                                    </select>
+                                                    <span className="custom-arrow" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: '10px',
+                                                        transform: 'translateY(-55%)',
+                                                        fontSize: 'px',
+                                                        color: '#ccc',
+                                                        backgroundColor: 'transparent',/* add this line to remove fill color */
+                                                        textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                    }}>
+                                                        | {`▼`}
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Position</label>
+                                                <input type="text" name='yourPosition' value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Have you used any sales tool before</label>
+                                                <input type="text" name='saleBefore' value={saleBefore} onChange={(e) => setSaleBefore(e.target.value)} />
+                                            </div>
+                                            {/* <div className="form-group">
+                                        <label>Position (optional):</label>
+                                        <select value={wantFirst} onChange={(e) => setWantFirst(e.target.value)}>
+                                            <option value="Close deals faster">Close deals faster</option>
+                                            <option value="Find new leads">Find new leads</option>
+                                            <option value="Manage relationships better">Manage relationships better</option>
+                                            <option value="Set goals and track progress">Set goals and track progress</option>
+                                            <option value="Set up a team and permissions">Set up a team and permissions</option>
+                                        </select>
+                                    </div> */}
+                                            <div className="form-group">
+                                                <label>Number of Employees</label>
+                                                <div className="dropdown" style={{
+                                                    zIndex: '3',
+                                                    backgroundColor: '#f9f9f9',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    padding: '0px',
+                                                    width: '100%',
+                                                    position: 'relative'
+                                                }}>
+                                                    <select
+                                                        placeholder='Select...'
+                                                        name='noOfEmployess'
+                                                        value={noOfEmployess || ''}
+                                                        onChange={(e) => setNoOfEmployees(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '42px',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            border: 'none',
+                                                            borderRadius: '5px',
+                                                            // backgroundColor: '#f9f9f9',
+                                                            appearance: 'none',
+                                                            WebkitAppearance: 'none',
+                                                            MozAppearance: 'none',
+
+                                                        }}
+                                                    >
+                                                        <option value="" disabled hidden>{noOfEmployess ? '' : 'Select...'}</option>
+                                                        <option value="10-50">10-50</option>
+                                                        <option value="50-100">50-100</option>
+                                                        <option value="100-200">100-200</option>
+                                                    </select>
+                                                    <span className="custom-arrow" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: '10px',
+                                                        transform: 'translateY(-55%)',
+                                                        fontSize: 'px',
+                                                        color: '#ccc',
+                                                        backgroundColor: 'transparent',/* add this line to remove fill color */
+                                                        textShadow: '-1px -1px 0 #fff' /* add this line to remove fill color */
+                                                    }}>
+                                                        | {`▼`}
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {/* <div className="form-group">
+                                        <label>Company Name:</label>
+                                        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                                    </div> */}
+                                            <div className="nav-buttons">
+                                                <button type="button" onClick={prevStep}>
+                                                    Previous
+                                                </button>
+                                                {isSubmitted ? (
+                                                    <button type="submit" className="next-btn" style={{ backgroundColor: 'grey', cursor: 'none' }} disabled
+                                                    >
+                                                        Loading...
+                                                    </button>
+                                                ) : (
+                                                    <button type="submit" className="next-btn">
+                                                        Submit
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {/* <button disabled={loading} className={loading ? "disabledAccountButton" : "accountButton"}>{loading ? <FerrisWheelSpinner loading={loading} size={28} color="#6DBB48" /> : "Create Account"}</button> */}
+
+                                            {/* <button type="button" onClick={handleNext}>
+                                        Next
+                                    </button> */}
                                         </div>
                                     </div>
                                 )}
                             </form>
                         </div>
                     </div>
-                </div>
-            </section>
-            <Footer />
+                </div >
+            </section >
+            // <Footer />
         </>
     );
 };

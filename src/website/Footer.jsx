@@ -30,7 +30,7 @@ const Footer = () => {
                         <div className="row">
                             <div className="col-xl-3 col-lg-4 col-md-6">
                                 <div className="ud-widget">
-                                    <a href="index.html" className="ud-footer-logo" style={{ textDecoration: 'none', color: 'black' }}>
+                                    <a href="/header" className="ud-footer-logo" style={{ textDecoration: 'none', color: 'black' }}>
                                         <h4 style={{ color: 'aliceblue', textDecoration: 'none' }}>
                                             INFINITI SUITE
                                         </h4>
@@ -73,9 +73,12 @@ const Footer = () => {
                                         <li>
                                             <a href="term.html">Terms of service</a>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <a href="refund.html">Refund policy</a>
-                                        </li>
+                                        </li> */}
+                                        <Link to='/refund'>
+                                            Refund Policy
+                                        </Link>
                                     </ul>
                                 </div>
                             </div>
