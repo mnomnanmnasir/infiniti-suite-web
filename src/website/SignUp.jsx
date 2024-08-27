@@ -47,6 +47,8 @@ const SignUpForm = () => {
     });
 
 
+    const [existingEmail, setExistingEmail] = useState(null);
+
     useEffect(() => {
         const optionsList = countries.map((country) => (
             <li key={country.code} className="option">
@@ -74,6 +76,9 @@ const SignUpForm = () => {
     //     }
     //     return false;
     // };
+
+
+
 
     const handleInputChange1 = (e) => {
         let name, value;
@@ -115,22 +120,7 @@ const SignUpForm = () => {
         setOptions(filteredOptions);
     };
     const [currentStep, setCurrentStep] = useState(1);
-    // const [formData, setFormData] = useState({
-    //     name: '',
-    //     email: '',
-    //     password: '',
-    //     phoneNumber: '',
-    //     yourPosition: '',
-    //     saleBefore: '',
-    //     wantFirst: '',
-    //     companyName: '',
-    //     noOfEmployess: '',
-    //     selectCompanyType: '',
-    //     employeeWillUse: '',
-    //     address: '',
-    //     postalCode: '',
-    //     country: '',
-    // });
+
 
     let token = localStorage.getItem('token');
     const [model, setModel] = useState({});
@@ -158,11 +148,7 @@ const SignUpForm = () => {
     const [phone, setPhone] = useState("");
 
 
-    // const [timezoneOffset, settimezoneOffset] = useState('');
-    // const [timezone, setSelectedTimezone] = useState(
-    //     Intl.DateTimeFormat().resolvedOptions().timeZone
-    // )
-    // Assuming you have state variables to store the selected timezone and timezone offset
+
     const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
     const [timezoneOffset, setTimezoneOffset] = useState(null);
 
@@ -173,39 +159,7 @@ const SignUpForm = () => {
         'Content-Type': 'application/json'
     }
 
-    // const handleStartDateChange = (timezone) => {
-    //     console.log(timezone);
-    //     setSelectedTimezone(timezone);
-    //     const newtime = timezone?.value;
-    //     setModel({ timezoneOffset: timezone?.offset })
-    //     setModel((prevUserInfo) => ({
-    //         ...prevUserInfo,
-    //         timezone: newtime,
-    //     }));
-    // };
-    // const handleStartDateChange = (timezone) => {
-    //     console.log("Selected Timezone:", timezone.value);
-    //     console.log("Timezone Offset:", timezone.offset);
 
-    //     const timezoneOffset = {
-    //       hours: Math.floor(timezone.offset),
-    //       minutes: (timezone.offset % 1) * 60
-    //     };
-
-    //     console.log("Timezone Offset Object:", timezoneOffset);
-
-    //     setSelectedTimezone(timezone);
-    //     setModel((prevUserInfo) => ({
-    //       ...prevUserInfo,
-    //       timezone: {
-    //         value: timezone.value,
-    //         abbrev: timezone.abbrev,
-    //         altName: timezone.altName,
-    //         label: timezone.label
-    //       },
-    //       timezoneOffset: timezoneOffset
-    //     }));
-    //   };
 
 
     // Modify the handleStartDateChange function to update both state variables
@@ -214,9 +168,7 @@ const SignUpForm = () => {
         setTimezone(selectedTimezone.value); // Assuming the TimezoneSelect component provides the selected value
         setTimezoneOffset(selectedTimezone.offset); // Assuming the TimezoneSelect component also provides the offset
     };
-    // useEffect(() => {
-    //     setSelectedTimezone(items.timezone)
-    // }, [items])
+
 
     const handleNext = () => {
         setStep(step + 1);
@@ -264,40 +216,13 @@ const SignUpForm = () => {
     };
 
 
-    // const handleSubmit = async (event) => {  
-    //     event.preventDefault();
-
-    //     const registerData = {
-    //         name,
-    //         email,
-    //         password,
-    //         phoneNumber,
-    //         yourPosition,
-    //         saleBefore,
-    //         wantFirst,
-    //         companyName,
-    //         noOfEmployees,
-    //         selectCompanyType,
-    //         employeeWillUse,
-    //         address,
-    //         postalCode,
-    //         country,
-    //     };
-
-    //     try {
-    //         const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signup', registerData);
-    //         console.log('Registration successful!');
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error('Error registering:', error);
-    //     }
-    // };
     const [emailError, setEmailError] = useState(false);
     const [phoneError, setPhoneError] = useState(false);
     useEffect(() => {
         const concatenatedAddress = `${street_address}, ${city_Address}, ${postalCode}, ${country}`;
         setFullAddress(concatenatedAddress);
     }, [street_address, city_Address, postalCode, country]);
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -322,22 +247,8 @@ const SignUpForm = () => {
             city_Address,
         };
 
-
         if (!registerData.name || !registerData.email || !registerData.password || !registerData.phoneNumber || !registerData.yourPosition || !registerData.saleBefore || !registerData.companyName || !registerData.noOfEmployess || !registerData.selectCompanyType || !registerData.address || !registerData.postalCode || !registerData.country || !registerData.timezone || !registerData.timezoneOffset || !registerData.street_address || !registerData.city_Address) {
             enqueueSnackbar("Please fill in all required fields.", {
-                variant: "error",
-                anchorOrigin: {
-                    vertical: "top",
-                    horizontal: "right"
-                }
-            });
-            setIsSubmitted(false); // Re-enable the button
-            return;
-        }
-
-
-        if (!registerData.email.includes("@") || !registerData.email.includes(".")) {
-            enqueueSnackbar("Invalid email please enter valid email", {
                 variant: "error",
                 anchorOrigin: {
                     vertical: "top",
@@ -353,21 +264,27 @@ const SignUpForm = () => {
         try {
             const response = await axios.post('https://infinitisuiteapi.vercel.app/api/v1/signup', registerData);
             console.log('Registration successful!');
-            console.log(response.data);
-
-            if (response.status === 201 && response.data.Message) {
-                enqueueSnackbar("Account created successfully!", {
-                    variant: "success",
+            // console.log('ressssssssss', response.message);
+            // navigate('/login', { replace: true });
+            if (response.status === 200) {
+                setLoading(false);
+                // Redirect to login page immediately
+                setIsSubmitted(false);
+                // Show success message and navigate after snackbar is shown
+                enqueueSnackbar('Registration successful!', {
+                    variant: 'success',
                     anchorOrigin: {
-                        vertical: "top",
-                        horizontal: "right"
+                        vertical: 'top',
+                        horizontal: 'right'
+                    },
+                    onClose: () => {
+                        // Navigate after snackbar appears and is dismissed
+                        navigate('/login', { replace: true });
                     }
                 });
-                setLoading(false);
-                setIsSubmitted(false); // Re-enable the button
-                navigate('/login', { replace: true }); // Redirect to login page immediately
+                // Re-enable the button
             } else {
-                enqueueSnackbar('Error registering. Please try again.', {
+                enqueueSnackbar('thiss===>', response.data.message, {
                     variant: "error",
                     anchorOrigin: {
                         vertical: "top",
@@ -377,18 +294,32 @@ const SignUpForm = () => {
                 setIsSubmitted(false); // Re-enable the button
             }
         } catch (error) {
-            console.error('Error registering:', error);
-            enqueueSnackbar('Error registering. Please try again.', {
-                variant: "error",
-                anchorOrigin: {
-                    vertical: "top",
-                    horizontal: "right"
-                }
-            });
+            // console.log('ressssssssss', error.response.data.message)
+            if (error.response && error.response.data && error.response.data.message) {
+                // Display the specific error message from the API
+                enqueueSnackbar(error.response.data.message, {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right"
+                    }
+                });
+                console.error('Error from API:', error.response.data.message); // Print error to console
+            } else {
+                // Fallback for unknown errors
+                enqueueSnackbar('An unexpected error occurred. Please try again.', {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: "top",
+                        horizontal: "right"
+                    }
+                });
+                console.error('Unexpected error:', error); // Print full error object to console
+            }
             setIsSubmitted(false); // Re-enable the button
         }
     };
-    // console.log('Handle Submit ....', handleSubmit())no
+
 
     return (
         <>
@@ -441,9 +372,18 @@ const SignUpForm = () => {
                                             </div>
                                             <div className="form-group">
                                                 <label>Email Address*</label>
-                                                <input type="email" name='email' value={email} onChange={(e) => setEmailAdress(e.target.value)} style={{ borderColor: emailError ? 'red' : '' }}
+                                                <input type="email" name='email' value={email} onChange={(e) => {
+                                                    setEmailAdress(e.target.value);
+                                                    if (existingEmail) {
+                                                        setExistingEmail("Email already exists. Please enter a different email.");
+                                                    } else {
+                                                        setExistingEmail("");
+                                                    }
+                                                }} style={{ borderColor: existingEmail ? 'red' : '' }}
                                                     required />
                                                 {/* {emailError && <div style={{ color: 'red' }}>{errorMes  sage}</div>} */}
+                                                {existingEmail && <div style={{ color: 'red' }}>Email already exists. Please enter a different email.</div>}
+
                                             </div>
                                             <div className="form-group">
                                                 <label>Password*</label>
@@ -454,28 +394,7 @@ const SignUpForm = () => {
                                             <div className="form-group">
                                                 <label htmlFor="text">Phone Number*</label>
 
-                                                {/* <PhoneInput
-                                                        country={"pk"}
-                                                        enableSearch={true}
-                                                        id='phoneNumber'
-                                                        name='phoneNumber'
-                                                        value={formData.phoneNumber}
-                                                        onChange={(value) => {
-                                                            const formattedValue = value.replace(/\D+/g, '');
-                                                            if (formattedValue.length === 11) {
-                                                                const phoneNumber = `0${formattedValue.slice(0, 2)}${formattedValue.slice(2)}`;
-                                                                handleInputChange1(phoneNumber);
-                                                            } else {
-                                                                handleInputChange1(formattedValue);
-                                                            }
-                                                        }}
-                                                        containerStyle={{ flex: 1, marginRight: '-50px' }}
-                                                        inputStyle={{ fontSize: '16px', padding: '10px 50px', width: '91%', marginRight: '-50px' }}
-                                                        hideCountryCode={true}
-                                                        disableCountryCode={true}
-                                                        placeholder=""
-                                                        maxLength={11}
-                                                    /> */}
+
                                                 <PhoneInput
                                                     // country={"eg"}
                                                     // enableSearch={true}
@@ -486,40 +405,8 @@ const SignUpForm = () => {
                                                     inputStyle={{ fontSize: '16px', padding: '9px 50px', width: '100%', marginRight: '-50px' }}
                                                     placeholder="" // Add this prop to remove the placeholder
                                                 />
-                                                {/* <input
-                                                        type="text"
-                                                        name='phoneNumber'
-                                                        value={formData.phoneNumber}
-                                                        onChange={handleInputChange1}
-                                                        style={{ fontSize: '16px', padding: '10px', width: '230%', marginLeft: 20 }}
-                                                    /> */}
-                                                {/* <div className="form-group">
-                                                    <label htmlFor="text">Phone Number:</label>
-                                                    <div style={{ display: 'flex' }}>
-                                                        <PhoneInput
-                                                            country={"eg"}
-                                                            enableSearch={true}
-                                                            name='phoneNumber'
-                                                            value={phoneNumber}
-                                                            onChange={(value) => {
-                                                                handleInputChange1(value);
-                                                                console.log("Phone Number:", value); // Add this line to log the phone number to the console
-                                                            }}
-                                                            containerStyle={{ flex: 1 }}
-                                                            inputStyle={{ fontSize: '16px', padding: '10px', width: '230%' }}
-                                                            hideCountryCode={true} // Add this prop to hide the flag
-                                                            disableCountryCode={true} // Add this prop to disable the country code dropdown
-                                                        />
-                                                    </div>
-                                                </div> */}
-                                                {/* <input
-                                                        type="tel"
-                                                        name="phoneNumber"
-                                                        placeholder="Phone Number"
-                                                        value={formData.phoneNumber}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                    /> */}
+
+
                                             </div>
 
                                             <div className="nav-buttons">
@@ -532,41 +419,7 @@ const SignUpForm = () => {
                                     <div className="form-container active" id="step-2">
 
                                         <div>
-                                            {/* <div className="form-group">
-                                                                            <label>Number of Employees:</label>
-                                                                            <select value={noOfEmployees} onChange={(e) => setNoOfEmployees(e.target.value)}>
-                                                                                <option value="10-50">10-50</option>
-                                                                                <option value="50-100">50-100</option>
-                                                                                <option value="100-200">100-200</option>
-                                                                            </select>
-                                                                        </div> */}
 
-                                            {/* <div className="form-group">
-                                                                            <label>Select Company Type:</label>
-                                                                            <select value={selectCompanyType} onChange={(e) => setSelectCompanyType(e.target.value)}>
-                                                                                <option value="technology-startup">Technology Startup</option>
-                                                                                <option value="ecommerce-business">E-commerce Business</option>
-                                                                                <option value="manufacturing-company">Manufacturing Company</option>
-                                                                                <option value="consulting-firm">Consulting Firm</option>
-                                                                                <option value="healthcare-services">Healthcare Services</option>
-                                                                                <option value="financial-services">Financial Services</option>
-                                                                            </select>
-                                                                        </div>           
-                                                                        <div className="form-group">
-                                                                            <label>Number of Employees who will use Infiniti Suite:</label>
-                                                                            <select value={employeeWillUse} onChange={(e) => setEmployeeWillUse(e.target.value)}>
-                                                                                <option value="1-5">1-5</option>
-                                                                                <option value="6-10">6-10</option>
-                                                                                <option value="11-20">11-20</option>
-                                                                                <option value="21-50">21-50</option>
-                                                                                <option value="51-100">51-100</option>
-                                                                                <option value="100+">100+</option>
-                                                                            </select>
-                                                                        </div> */}
-                                            {/* <div className="form-group">
-                                                <label>Country:</label>
-                                                <input type="text" name='country' value={country} onChange={(e) => setCountry(e.target.value)} />
-                                            </div> */}
                                             <div className="form-group">
                                                 <label>Country*</label>
                                                 <div className="dropdown" style={{
@@ -1120,8 +973,8 @@ const SignUpForm = () => {
                             </form>
                         </div>
                     </div>
-                </div >
-            </section >
+                </div>
+            </section>
             // <Footer />
         </>
     );
