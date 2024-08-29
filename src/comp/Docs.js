@@ -9,8 +9,8 @@ const Docs = () => {
     const [docs, setDocs] = useState([]);
     const [loading, setLoading] = useState(false);
     // const clientId = "928209376096-euig13evhrr352f9m3cov0t8aq4o4dj7.apps.googleusercontent.com";
-    const clientId = "928209376096-giumfldna5ggmfpim0iek1btcj895ssb.apps.googleusercontent.com";
-    const apiKey = "AIzaSyAVnvOYTZj-MbKGhkaMG5d92dxnjklVlN0";
+    const clientId = "209177226023-dv7fd0gg4cl14ql4i75l6jh084r919a2.apps.googleusercontent.com";
+    const apiKey = "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";
     const discoveryDocs = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
     const scope = "https://www.googleapis.com/auth/drive.readonly";
 
@@ -62,7 +62,7 @@ const Docs = () => {
     const listDocs = () => {
         setLoading(true);
         gapi.client.drive.files.list({
-            'pageSize': 10,
+            'pageSize': 500,
             'fields': "nextPageToken, files(id, name, mimeType, owners, webViewLink, createdTime, modifiedTime, description)"
         }).then((response) => {
             setLoading(false);
