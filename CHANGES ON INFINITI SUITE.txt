@@ -1,0 +1,7 @@
+Create a new file authContext.js to store the authentication state. (45mins)
+Use React.createContext to create a context API. (40mins)
+Define the initial auth state (e.g., isLoggedIn, token, etc.). (35mins)
+Create a new file userContext.js to store the user data. (40mins)
+Use React.createContext to create a context API. (45mins)
+Create a new file PrivateRoute.js to create a private route component. (35mins)
+Define the private routes in the App.js file. (35mins)
