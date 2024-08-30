@@ -36,7 +36,7 @@ const Docs = () => {
                 scope: scope
             });
             console.log(auth2.currentUser.get().getAuthResponse().access_token);
-            localStorage.setItem("user_token", auth2.currentUser.get().getAuthResponse().access_token);
+            // localStorage.setItem("user_token", auth2.currentUser.get().getAuthResponse().access_token);
         } catch (error) {
             console.error("Sign-in failed", error);
         }

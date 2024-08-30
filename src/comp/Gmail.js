@@ -30,9 +30,9 @@ function Gmail() {
     const password = searchParams.get('password');
 
     useEffect(() => {
-        localStorage.setItem("auth_token", params.token)
-        localStorage.setItem("email", email)
-        localStorage.setItem("password", password)
+        // localStorage.setItem("auth_token", params.token)
+        // localStorage.setItem("email", email)
+        // localStorage.setItem("password", password)
     }, [])
 
     const [items, setItems] = useState([
@@ -99,7 +99,7 @@ function Gmail() {
         if (auth2.isSignedIn.get()) {
             var profile = auth2.currentUser.get().getBasicProfile();
             setCurrentUser(profile)
-            localStorage.setItem("pipedrive_user", JSON.stringify(profile))
+            // localStorage.setItem("pipedrive_user", JSON.stringify(profile))
         } else {
             console.log('Not signed in');
         }
@@ -114,7 +114,7 @@ function Gmail() {
         const auth2 = gapi.auth2.getAuthInstance();
         await auth2.signIn();
         console.log(auth2.currentUser.get().getAuthResponse().access_token);
-        localStorage.setItem("user_token", auth2.currentUser.get().getAuthResponse().access_token);
+        // localStorage.setItem("user_token", auth2.currentUser.get().getAuthResponse().access_token);
     };
 
     const signOut = () => {
@@ -256,7 +256,7 @@ function Gmail() {
         gapi.client.gmail.users.messages.list({
             'userId': 'me',
             'labelIds': 'INBOX',
-            'maxResults': 500
+            'maxResults': 10
         }).then(function (response) {
             const messages = response.result.messages;
             getMessagesDetail(messages);
@@ -438,7 +438,7 @@ function Gmail() {
                 const auth2 = gapi.auth2.getAuthInstance();
                 await auth2.signIn({ prompt: 'select_account', login_hint: email });
                 const token = auth2.currentUser.get().getAuthResponse().access_token;
-                localStorage.setItem("user_token", token);
+                // localStorage.setItem("user_token", token);
                 console.log(token);
             } catch (error) {
                 console.error("Error signing in", error);
