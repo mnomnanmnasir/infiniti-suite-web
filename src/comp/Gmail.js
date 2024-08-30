@@ -256,7 +256,7 @@ function Gmail() {
         gapi.client.gmail.users.messages.list({
             'userId': 'me',
             'labelIds': 'INBOX',
-            'maxResults': 10
+            'maxResults': 500
         }).then(function (response) {
             const messages = response.result.messages;
             getMessagesDetail(messages);
@@ -308,7 +308,21 @@ function Gmail() {
                 }
             });
         } else {
-            content = atob(payload.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+            if (payload.body) {
+                if (Array.isArray(payload.body)) {
+                    console.log('payload.body is an array:', payload.body);
+                } else if (typeof payload.body === 'string') {
+                    console.log('payload.body is a string:', payload.body);
+                } else {
+                    if (payload.body.data) {
+                        content = atob(payload.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+                    } else {
+                        console.log('payload.body.data is undefined:', payload.body);
+                    }
+                }
+            } else {
+                console.log('payload.body is undefined');
+            }
         }
         return content;
     }
@@ -627,7 +641,7 @@ function Gmail() {
                                     <span className="material-icons"> account_circle </span>
                                 </div>
                             </div> */}
-                            <div className="main__body">
+                            <div className="main__body" style={{ marginTop: '-4%' }}>
                                 <div className="sidebar">
                                     <button className="sidebar__compose" onClick={() => setOpenCompose(true)}>
                                         <span className="material-icons"> add </span>Compose

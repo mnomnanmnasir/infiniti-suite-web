@@ -3426,6 +3426,7 @@ p {
 
 .ud-single-feature {
   margin-bottom: 40px;
+  text-decoration: none;
 }
 
 .ud-single-feature:hover .ud-feature-icon::before {
@@ -3477,7 +3478,7 @@ p {
   font-size: 16px;
   line-height: 28px;
   margin-bottom: 12px;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -4209,7 +4210,7 @@ only screen and (min-width: 576px) and (max-width: 767px) {
 /* ===== Footer CSS ===== */
 .ud-footer {
   background: var(--heading-color);
-  padding-top: 100px;
+  padding-top: 50px;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -4391,8 +4392,8 @@ only screen and (min-width: 576px) and (max-width: 767px) {
 
 /* ====== Banner CSS ======= */
 .ud-page-banner {
-  padding-top: 130px;
-  padding-bottom: 80px;
+  padding-top: 50px;
+  padding-bottom: -16pxpx;
   background: var(--primary-color);
   /* background-color: ('./as'); */
   background-image: url("./assets/images/banner/banner-bg.svg");

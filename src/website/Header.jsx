@@ -51,7 +51,7 @@ const Header = () => {
                           <a href="https://sstrack.io/">
                             <div className="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
                               <div className="ud-feature-icon">
-                                <img src={sstrack} style={{ width: '50px' }} alt="" />
+                                <img src={sstrack} style={{ width: '50px', textDecoration: 'none' }} alt="" />
                               </div>
                               <div className="ud-feature-content" style={{ textDecoration: 'none' }}>
                                 <h3 className="ud-feature-title" style={{ textDecoration: 'none', color: 'black' }}>SS-Track</h3>

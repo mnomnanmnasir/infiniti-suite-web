@@ -5,7 +5,7 @@ import md5 from 'md5';
 import Loader2 from './Loader2';
 
 const Docs = () => {
-    
+
     const [docs, setDocs] = useState([]);
     const [loading, setLoading] = useState(false);
     // const clientId = "928209376096-euig13evhrr352f9m3cov0t8aq4o4dj7.apps.googleusercontent.com";
@@ -126,14 +126,15 @@ const Docs = () => {
     console.log(docs);
 
     return (
-        <div className="container">
+        <div className="container" style={{ marginTop: '-5%' }}>
             {loading ? (
                 <div style={{
                     display: 'flex',
+                    marginLeft: '50%',
                     justifyContent: 'center',
                     alignItems: 'center',
                     width: '100%',
-                    height: '80vh',
+                    height: '100vh',
                 }}>
                     <Loader2 />
                 </div>

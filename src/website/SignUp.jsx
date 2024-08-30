@@ -342,7 +342,7 @@ const SignUpForm = () => {
                 </div>
             </section>
             <section id="contact" className="ud-contact">
-                <div className="container">
+                <div className="container" style={{marginTop: '-5%', marginBottom: '-5%'}}>
                     <div className="signpwrapper" style={{ width: '40%', display: 'block', margin: '0 auto' }}>
                         <div className="ud-contact-content-wrapper">
                             <div className="step-indicator">
