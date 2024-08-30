@@ -6,7 +6,7 @@ const signOut = () => {
     gapi.auth2.getAuthInstance().signOut()
         .then(() => {
             console.log("User signed out.");
-            window.location.href = "https://pipedrivegmail.vercel.app/header"
+            window.location.href = "https://infiniti-suite-web.vercel.app/header"
         })
         .catch((error) => {
             console.error("Error signing out: ", error);
