@@ -221,7 +221,7 @@ const SignUpForm = () => {
                 setnameError('')  // Clear error if name is valid
             }
             if (!formData.phoneNumber) {
-                setphnumberError('This please enter phonenumber required.')
+                setphnumberError('Please Enter Phone Number')
                 hasError1 = true; // Mark that there's an error
             } else {
                 setphnumberError('')  // Clear error if name is valid
