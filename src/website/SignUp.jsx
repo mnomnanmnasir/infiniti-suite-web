@@ -11,6 +11,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { FerrisWheelSpinner } from "react-spinner-overlay";
+import { Email } from '@mui/icons-material';
 
 
 const countries = [
@@ -45,7 +46,10 @@ const SignUpForm = () => {
     const [formData, setFormData] = useState({
         name: '',
     });
-
+    const [errors, setErrors] = useState({
+        name: '',
+        // Add other error states here
+    });
 
     const [existingEmail, setExistingEmail] = useState(null);
 
@@ -99,7 +103,11 @@ const SignUpForm = () => {
         });
         const formattedValue = value.replace(/\D+/g, '').slice(0, 11);
         setFormData({ ...formData, phoneNumber: formattedValue });
-
+        // Clear error when user starts typing
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            phoneNumber: '',
+        }));
     };
 
     const handleInputChange = (e) => {
@@ -109,15 +117,31 @@ const SignUpForm = () => {
             ...formData,
             [name]: value,
         });
+        // Clear error when user starts typing
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: '',
+        }));
     };
 
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const filteredOptions = options.filter((option) => {
-            const countryName = option.querySelector('.country-name').innerText.toLowerCase();
-            return countryName.includes(e.target.value.toLowerCase());
-        });
-        setOptions(filteredOptions);
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+
+        // Check if field is empty
+        if (!value) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: 'This field is required.',
+            }));
+        }
+    };
+    const handlePhoneBlur = () => {
+        if (!formData.phoneNumber) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                phoneNumber: 'Please Enter Phone Number',
+            }));
+        }
     };
     const [currentStep, setCurrentStep] = useState(1);
 
@@ -140,7 +164,7 @@ const SignUpForm = () => {
     const [street_address, setStreetAddress] = useState('');
     const [yourPosition, setYourPosition] = useState('');
     const [city_Address, setCity] = useState('');
-    const [wantFirst, setWantFirst] = useState([]);
+    const [wantFirst, setWantFirst] = useState('');
 
     const [loading, setLoading] = useState(false)
 
@@ -167,16 +191,10 @@ const SignUpForm = () => {
         console.log(selectedTimezone)
         setTimezone(selectedTimezone.value); // Assuming the TimezoneSelect component provides the selected value
         setTimezoneOffset(selectedTimezone.offset); // Assuming the TimezoneSelect component also provides the offset
+        if (timezoneerror) setTimezoneerror('');
     };
 
 
-    const handleNext = () => {
-        setStep(step + 1);
-    };
-
-    const handlePrevious = () => {
-        setStep(step - 1);
-    };
 
     const validateStep = (step) => {
         let isValid = true;
@@ -192,8 +210,91 @@ const SignUpForm = () => {
         return isValid;
     };
 
-
     const nextStep = () => {
+        if (currentStep === 1) {
+            let hasError1 = false;
+            // Validate Name
+            if (!formData.name) {
+                setnameError('This enter your name required.')
+                hasError1 = true; // Mark that there's an error
+            } else {
+                setnameError('')  // Clear error if name is valid
+            }
+            if (!formData.phoneNumber) {
+                setphnumberError('This please enter phonenumber required.')
+                hasError1 = true; // Mark that there's an error
+            } else {
+                setphnumberError('')  // Clear error if name is valid
+            }
+
+            if (!email) {
+                setemailError('Please select the Country');
+                hasError1 = true;  // Mark that there's an error
+            } else {
+                setemailError('');  // Clear error if country is selected
+            }
+            if (!password) {
+                setpasswordError('Please select the Country');
+                hasError1 = true;  // Mark that there's an error
+            } else {
+                setpasswordError('');  // Clear error if country is selected
+            }
+            if (hasError1) {
+                return;  // Exit function if there are any errors
+            }
+
+        }
+
+        if (currentStep === 2) {
+            let hasError = false;
+            console.log('dfsdfsdfsdf', timezoneOffset)
+            if (!city_Address) {
+                setError('Please enter Country name');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setError('')
+            }
+            if (!yourPosition) {
+                setPositionError('please enter your position');
+                setIsSubmitted(false);
+            }
+            if (!street_address) {
+                setStreetError('Please enter street address');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setStreetError('')
+            }
+            if (!postalCode) {
+                setPostalError('Please enter postal code');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setPostalError('')
+            }
+            if (!country) {
+                setCountryerror('Please select the Country');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setCountryerror('');  // Clear error if country is selected
+            }
+
+            if (!wantFirst) {
+                setWantFirsterror('Please select any field');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setWantFirsterror('');  // Clear error if wantFirst is selected
+            }
+            if (!timezoneOffset) {
+                setTimezoneerror('Please fill this field');
+                hasError = true;  // Mark that there's an error
+            } else {
+                setWantFirsterror('');  // Clear error if wantFirst is selected
+            }
+
+            if (hasError) {
+                return;  // Exit function if there are any errors
+            }
+        }
+
         if (validateStep(currentStep)) {
             if (currentStep < 3) {
                 setCurrentStep(currentStep + 1);
@@ -216,8 +317,129 @@ const SignUpForm = () => {
     };
 
 
-    const [emailError, setEmailError] = useState(false);
-    const [phoneError, setPhoneError] = useState(false);
+    // const [city_Address, setCity] = useState('');
+    const [error, setError] = useState('');
+
+    const [streetError, setStreetError] = useState('');
+    const [postalError, setPostalError] = useState('');
+    const [companyError, setCompanyError] = useState('');
+    const [positionError, setPositionError] = useState('');
+    const [salesToolError, setSalesToolError] = useState('');
+    const [employeeError, setEmployeeError] = useState('');
+    const [companyTypeError, setCompanyTypeError] = useState('');
+    const [countryerror, setCountryerror] = useState('');
+    const [wantFirsterror, setWantFirsterror] = useState('');
+    const [timezoneerror, setTimezoneerror] = useState('');
+    const [emailError, setemailError] = useState('')
+    const [passwordError, setpasswordError] = useState('')
+    const [nameError, setnameError] = useState('')
+    const [phnumberError, setphnumberError] = useState('')
+
+    const handleChangecity = (e) => {
+        setCity(e.target.value);
+        if (error) setError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate input on blur
+    const handleBlurcity = () => {
+        if (!city_Address.trim()) {
+            setError('City is required');
+        }
+    };
+
+    // Function to handle street address change
+    const handleStreetChange = (e) => {
+        setStreetAddress(e.target.value);
+        if (streetError) setStreetError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate street address on blur
+    const handleStreetBlur = () => {
+        if (!street_address.trim()) {
+            setStreetError('Street Address is required');
+        }
+    };
+
+    // Function to handle postal code change
+    const handlePostalChange = (e) => {
+        setPostalCode(e.target.value);
+        if (postalError) setPostalError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate postal code on blur
+    const handlePostalBlur = () => {
+        if (!postalCode.trim()) {
+            setPostalError('Postal Code is required');
+        } else if (!/^[A-Za-z0-9\s-]+$/.test(postalCode)) {
+            // Example regex to allow letters, numbers, spaces, and dashes
+            setPostalError('Invalid Postal Code format');
+        }
+    };
+
+    // Function to handle company name change
+    const handleCompanyChange = (e) => {
+        setCompanyName(e.target.value);
+        if (companyError) setCompanyError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate company name on blur
+    const handleCompanyBlur = () => {
+        if (!companyName.trim()) {
+            setCompanyError('Company Name is required');
+        }
+    };
+
+    // Function to handle position change
+    const handlePositionChange = (e) => {
+        setYourPosition(e.target.value);
+        if (positionError) setPositionError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate position on blur
+    const handlePositionBlur = () => {
+        if (!yourPosition.trim()) {
+            setPositionError('Position is required');
+        }
+    };
+
+    // Function to handle sales tool input change
+    const handleSalesToolChange = (e) => {
+        setSaleBefore(e.target.value);
+        if (salesToolError) setSalesToolError(''); // Clear error when user starts typing
+    };
+
+    // Function to validate sales tool input on blur
+    const handleSalesToolBlur = () => {
+        if (!saleBefore.trim()) {
+            setSalesToolError('This field is required');
+        }
+    };
+
+    const handleNoOfEmployeesChange = (e) => {
+        setNoOfEmployees(e.target.value);
+        if (employeeError) setEmployeeError(''); // Clear error when user starts selecting an option
+    };
+    const handleselectCompanyTypeChange = (e) => {
+        setSelectCompanyType(e.target.value);
+        if (companyTypeError) setCompanyTypeError(''); // Clear error when user starts selecting an option
+    };
+    const handlecountryChange = (e) => {
+        setCountry(e.target.value);
+        if (countryerror) setCountryerror(''); // Clear error when user starts selecting an option
+    };
+    const handlewantFirstChange = (e) => {
+        setWantFirst(e.target.value);
+        if (wantFirsterror) setWantFirsterror(''); // Clear error when user starts selecting an option
+    };
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         const concatenatedAddress = `${street_address}, ${city_Address}, ${postalCode}, ${country}`;
         setFullAddress(concatenatedAddress);
@@ -246,7 +468,31 @@ const SignUpForm = () => {
             street_address,
             city_Address,
         };
+        // Validation logic
 
+        // Validation logic with else if
+        if(!saleBefore){
+            setSalesToolError('please enter this field');
+            setIsSubmitted(false);
+        }
+
+      
+
+        if (!companyName) {
+            setCompanyError('please enter Company Name');
+            setIsSubmitted(false);
+        }
+
+        if (!selectCompanyType) {
+            setCompanyTypeError('Please select the Company Type');
+            setIsSubmitted(false);
+
+        }
+        if (!noOfEmployess) {
+            setEmployeeError('Please select the number of employees.');
+            setIsSubmitted(false);
+
+        }
         if (!registerData.name || !registerData.email || !registerData.password || !registerData.phoneNumber || !registerData.yourPosition || !registerData.saleBefore || !registerData.companyName || !registerData.noOfEmployess || !registerData.selectCompanyType || !registerData.address || !registerData.postalCode || !registerData.country || !registerData.timezone || !registerData.timezoneOffset || !registerData.street_address || !registerData.city_Address) {
             enqueueSnackbar("Please fill in all required fields.", {
                 variant: "error",
@@ -284,7 +530,7 @@ const SignUpForm = () => {
                 });
                 // Re-enable the button
             } else {
-                enqueueSnackbar('thiss===>', response.data.message, {
+                enqueueSnackbar(response.data.message, {
                     variant: "error",
                     anchorOrigin: {
                         vertical: "top",
@@ -342,7 +588,7 @@ const SignUpForm = () => {
                 </div>
             </section>
             <section id="contact" className="ud-contact">
-                <div className="container" style={{marginTop: '-5%', marginBottom: '-5%'}}>
+                <div className="container">
                     <div className="signpwrapper" style={{ width: '40%', display: 'block', margin: '0 auto' }}>
                         <div className="ud-contact-content-wrapper">
                             <div className="step-indicator">
@@ -368,7 +614,16 @@ const SignUpForm = () => {
                                         <div>
                                             <div className="form-group">
                                                 <label>Full Name*</label>
-                                                <input type="text" name='name' value={formData.name} onChange={handleInputChange} required />
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleInputChange}
+                                                    onBlur={handleBlur}  // Add onBlur handler
+                                                    required
+                                                />
+                                                {errors.name && <span style={{ color: 'red' }}>{errors.name}</span>}
+                                                {nameError && <span style={{ color: 'red' }}>{nameError}</span>}
                                             </div>
                                             <div className="form-group">
                                                 <label>Email Address*</label>
@@ -383,30 +638,29 @@ const SignUpForm = () => {
                                                     required />
                                                 {/* {emailError && <div style={{ color: 'red' }}>{errorMes  sage}</div>} */}
                                                 {existingEmail && <div style={{ color: 'red' }}>Email already exists. Please enter a different email.</div>}
-
+                                                {emailError && <span style={{ color: 'red' }}>{emailError}</span>}
                                             </div>
                                             <div className="form-group">
                                                 <label>Password*</label>
                                                 <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
                                             </div>
-                                            {/* <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /> */}
+                                            {passwordError && <span style={{ color: 'red' }}>{passwordError}</span>}
+
 
                                             <div className="form-group">
                                                 <label htmlFor="text">Phone Number*</label>
-
-
                                                 <PhoneInput
-                                                    // country={"eg"}
-                                                    // enableSearch={true}
                                                     name='phoneNumber'
                                                     value={formData.phoneNumber}
                                                     onChange={handleInputChange1}
+                                                    onBlur={handlePhoneBlur} // Add onBlur handler for PhoneInput
                                                     containerStyle={{ flex: 1, marginRight: '-50px' }}
                                                     inputStyle={{ fontSize: '16px', padding: '9px 50px', width: '100%', marginRight: '-50px' }}
                                                     placeholder="" // Add this prop to remove the placeholder
                                                 />
-
-
+                                                {/* Inline style for error message */}
+                                                {errors.phoneNumber && <span style={{ color: 'red' }}>{errors.phoneNumber}</span>}
+                                                {phnumberError && <span style={{ color: 'red' }}>{phnumberError}</span>}
                                             </div>
 
                                             <div className="nav-buttons">
@@ -436,7 +690,7 @@ const SignUpForm = () => {
                                                         placeholder='Select...'
                                                         name='country'
                                                         value={country || ''}
-                                                        onChange={(e) => setCountry(e.target.value)}
+                                                        onChange={handlecountryChange}
                                                         style={{
                                                             width: '100%',
                                                             height: '42px',
@@ -657,18 +911,56 @@ const SignUpForm = () => {
 
                                                     </span>
                                                 </div>
+                                                {countryerror && (
+                                                    <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{countryerror}</p>
+                                                )}
                                             </div>
                                             <div className="form-group">
                                                 <label>City*</label>
-                                                <input type="text" name='city_Address' value={city_Address} onChange={(e) => setCity(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    name="city_Address"
+                                                    value={city_Address}
+                                                    onChange={handleChangecity}
+                                                    onBlur={handleBlurcity} // Add onBlur event for validation
+                                                />
+                                                {/* Display error message if there's an error */}
+                                                {error && <p style={{ color: 'red', fontSize: '14px' }}>{error}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label>Street Address*</label>
-                                                <input type="text" name='street_address' value={street_address} onChange={(e) => setStreetAddress(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    name="street_address"
+                                                    value={street_address}
+                                                    onChange={handleStreetChange}
+                                                    onBlur={handleStreetBlur} // Add onBlur event for validation
+                                                />
+                                                {/* Display error message if there's an error */}
+                                                {streetError && <p style={{ color: 'red', fontSize: '14px' }}>{streetError}</p>}
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Position</label>
+                                                <input
+                                                    type="text"
+                                                    name="yourPosition"
+                                                    value={yourPosition}
+                                                    onChange={handlePositionChange}
+                                                    onBlur={handlePositionBlur} // Add onBlur event for validation
+                                                />
+                                                {positionError && <p style={{ color: 'red', fontSize: '14px' }}>{positionError}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label>Postal Code</label>
-                                                <input type="text" name='postalCode' value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    name="postalCode"
+                                                    value={postalCode}
+                                                    onChange={handlePostalChange}
+                                                    onBlur={handlePostalBlur} // Add onBlur event for validation
+                                                />
+                                                {/* Display error message if there's an error */}
+                                                {postalError && <p style={{ color: 'red', fontSize: '14px' }}>{postalError}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label>What do you want to do first</label>
@@ -685,7 +977,7 @@ const SignUpForm = () => {
                                                         placeholder='Select...'
                                                         name='selectCompanyType'
                                                         value={wantFirst || ''}
-                                                        onChange={(e) => setWantFirst(e.target.value)}
+                                                        onChange={handlewantFirstChange}
                                                         style={{
                                                             width: '100%',
                                                             // height: '42px',
@@ -728,6 +1020,9 @@ const SignUpForm = () => {
 
                                                     </span>
                                                 </div>
+                                                {wantFirsterror && (
+                                                    <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{wantFirsterror}</p>
+                                                )}
                                             </div>
                                             <div className="form-group">
                                                 <label className="countryLabel">Time Zone*</label>
@@ -782,6 +1077,9 @@ const SignUpForm = () => {
 
                                                     </span>
                                                 </div>
+                                                {timezoneerror && (
+                                                    <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{timezoneerror}</p>
+                                                )}
                                             </div>
                                             {/* </div>
                                           {/* <button type="button" onClick={handlePrevious}>
@@ -801,27 +1099,16 @@ const SignUpForm = () => {
                                         <div>
                                             <div className="form-group">
                                                 <label>Company Name*</label>
-                                                <input type="text" name='companyName' value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    name="companyName"
+                                                    value={companyName}
+                                                    onChange={handleCompanyChange}
+                                                    onBlur={handleCompanyBlur} // Add onBlur event for validation
+                                                />
+                                                {companyError && <p style={{ color: 'red', fontSize: '14px' }}>{companyError}</p>}
                                             </div>
-                                            {/* <button type="button" onClick={handleNext}>
-                                        Next
-                                    </button> */}
-                                            {/* <div className="form-group"> */}
-                                            {/* <label>Select Company Type:</label>
-                                                <div className="dropdown" style={{ zIndex: '3' }}>
-                                                    <select placeholder='Select...' name='selectCompanyType' value={selectCompanyType || ''} onChange={(e) => setSelectCompanyType(e.target.value)}> */}
-                                            {/* <option disabled hidden>Select...</option> */}
-                                            {/* <option>Select...</option> */}
-                                            {/* <option value="" disabled hidden>{selectCompanyType ? '' : 'Select...'}</option>
-                                                        <option value="technology-startup">Technology Startup</option>
-                                                        <option value="ecommerce-business">E-commerce Business</option>
-                                                        <option value="manufacturing-company">Manufacturing Company</option>
-                                                        <option value="consulting-firm">Consulting Firm</option>
-                                                        <option value="healthcare-services">Healthcare Services</option>
-                                                        <option value="financial-services">Financial Services</option>
-                                                    </select> */}
-                                            {/* </div>
-                                            </div> */}
+
                                             <div className="form-group">
                                                 <label>Select Company Type*</label>
                                                 <div className="dropdown" style={{
@@ -837,7 +1124,7 @@ const SignUpForm = () => {
                                                         placeholder='Select...'
                                                         name='selectCompanyType'
                                                         value={selectCompanyType || ''}
-                                                        onChange={(e) => setSelectCompanyType(e.target.value)}
+                                                        onChange={handleselectCompanyTypeChange}
                                                         style={{
                                                             width: '100%',
                                                             height: '42px',
@@ -874,25 +1161,25 @@ const SignUpForm = () => {
 
                                                     </span>
                                                 </div>
+                                                {companyTypeError && (
+                                                    <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{companyTypeError}</p>
+                                                )}
                                             </div>
-                                            <div className="form-group">
-                                                <label>Position</label>
-                                                <input type="text" name='yourPosition' value={yourPosition} onChange={(e) => setYourPosition(e.target.value)} />
-                                            </div>
+
+                                          
+
                                             <div className="form-group">
                                                 <label>Have you used any sales tool before</label>
-                                                <input type="text" name='saleBefore' value={saleBefore} onChange={(e) => setSaleBefore(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    name="saleBefore"
+                                                    value={saleBefore}
+                                                    onChange={handleSalesToolChange}
+                                                    onBlur={handleSalesToolBlur} // Add onBlur event for validation
+                                                />
+                                                {salesToolError && <p style={{ color: 'red', fontSize: '14px' }}>{salesToolError}</p>}
                                             </div>
-                                            {/* <div className="form-group">
-                                        <label>Position (optional):</label>
-                                        <select value={wantFirst} onChange={(e) => setWantFirst(e.target.value)}>
-                                            <option value="Close deals faster">Close deals faster</option>
-                                            <option value="Find new leads">Find new leads</option>
-                                            <option value="Manage relationships better">Manage relationships better</option>
-                                            <option value="Set goals and track progress">Set goals and track progress</option>
-                                            <option value="Set up a team and permissions">Set up a team and permissions</option>
-                                        </select>
-                                    </div> */}
+
                                             <div className="form-group">
                                                 <label>Number of Employees</label>
                                                 <div className="dropdown" style={{
@@ -908,7 +1195,8 @@ const SignUpForm = () => {
                                                         placeholder='Select...'
                                                         name='noOfEmployess'
                                                         value={noOfEmployess || ''}
-                                                        onChange={(e) => setNoOfEmployees(e.target.value)}
+                                                        // value={noOfEmployess}
+                                                        onChange={handleNoOfEmployeesChange}
                                                         style={{
                                                             width: '100%',
                                                             height: '42px',
@@ -942,11 +1230,11 @@ const SignUpForm = () => {
 
                                                     </span>
                                                 </div>
+                                                {employeeError && (
+                                                    <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{employeeError}</p>
+                                                )}
                                             </div>
-                                            {/* <div className="form-group">
-                                        <label>Company Name:</label>
-                                        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-                                    </div> */}
+
                                             <div className="nav-buttons">
                                                 <button type="button" onClick={prevStep}>
                                                     Previous
@@ -962,11 +1250,7 @@ const SignUpForm = () => {
                                                     </button>
                                                 )}
                                             </div>
-                                            {/* <button disabled={loading} className={loading ? "disabledAccountButton" : "accountButton"}>{loading ? <FerrisWheelSpinner loading={loading} size={28} color="#6DBB48" /> : "Create Account"}</button> */}
 
-                                            {/* <button type="button" onClick={handleNext}>
-                                        Next
-                                    </button> */}
                                         </div>
                                     </div>
                                 )}
