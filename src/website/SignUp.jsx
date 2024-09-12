@@ -249,7 +249,7 @@ const SignUpForm = () => {
             let hasError = false;
             console.log('dfsdfsdfsdf', timezoneOffset)
             if (!city_Address) {
-                setError('Please enter Country name');
+                setError('Please enter City name');
                 hasError = true;  // Mark that there's an error
             } else {
                 setError('')
