@@ -144,7 +144,7 @@ function Gmail() {
         const request = gapi.client.gmail.users.messages.list({
             'userId': 'me',
             'labelIds': ['SENT'],
-            'maxResults': 500  // You can adjust the number of results here
+            'maxResults': 50  // You can adjust the number of results here
         });
 
         request.execute((response) => {
@@ -256,7 +256,7 @@ function Gmail() {
         gapi.client.gmail.users.messages.list({
             'userId': 'me',
             'labelIds': 'INBOX',
-            'maxResults': 500
+            'maxResults': 50
         }).then(function (response) {
             const messages = response.result.messages;
             getMessagesDetail(messages);
